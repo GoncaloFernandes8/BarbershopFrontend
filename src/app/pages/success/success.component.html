@@ -1,0 +1,21 @@
+<ng-container *ngIf="booking; else notFound">
+  <div class="card" style="max-width:720px; margin: 1rem auto">
+    <h1>✅ Marcação confirmada!</h1>
+    <p class="muted">Obrigado, {{ booking.name }}. Vemo-nos em breve.</p>
+    <div style="margin:.8rem 0 1.2rem">
+      <div><strong>Serviço:</strong> {{ booking.serviceName }} <span class="price">{{ booking.price }}€</span></div>
+      <div><strong>Dia:</strong> {{ booking.date }} · <strong>Hora:</strong> {{ booking.time }}</div>
+      <div><strong>Contacto:</strong> {{ booking.phone }} <span *ngIf="booking.email">· {{ booking.email }}</span></div>
+      <div class="muted"><small>ID: {{ booking.id }}</small></div>
+    </div>
+    <a routerLink="/" class="btn">Voltar ao início</a>
+    <a routerLink="/marcacao" class="btn" style="margin-left:.5rem">Nova marcação</a>
+  </div>
+</ng-container>
+
+<ng-template #notFound>
+  <div class="card" style="max-width:720px; margin: 1rem auto">
+    <h1>Ups, não encontrei essa marcação.</h1>
+    <a routerLink="/" class="btn">Voltar ao início</a>
+  </div>
+</ng-template>

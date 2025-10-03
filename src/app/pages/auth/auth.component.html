@@ -1,0 +1,90 @@
+<section class="auth card">
+  <div class="tabs">
+    <button class="tab" [class.active]="activeTab()==='login'" (click)="switch('login')">Entrar</button>
+    <button class="tab" [class.active]="activeTab()==='register'" (click)="switch('register')">Criar conta</button>
+  </div>
+
+  <p class="muted small" *ngIf="note()">{{ note() }}</p>
+
+  <!-- LOGIN -->
+  <form *ngIf="activeTab()==='login'" [formGroup]="loginForm" (ngSubmit)="submitLogin()" class="form">
+    <div class="field">
+      <label for="lemail">Email</label>
+      <input id="lemail" type="email" formControlName="email" autocomplete="email" />
+      <div class="error" *ngIf="lf.email.touched && lf.email.invalid">Insere um email válido.</div>
+    </div>
+
+   <div class="field pwd">
+  <label for="lpass" class="pwd-label">
+    Palavra-passe
+    <button type="button"
+            class="pwd-emoji-btn"
+            (click)="showPwdLogin.set(!showPwdLogin())"
+            [attr.aria-pressed]="showPwdLogin()"
+            [attr.aria-label]="showPwdLogin() ? 'Esconder palavra-passe' : 'Mostrar palavra-passe'">
+      {{ showPwdLogin() ? '🙂' : '🫣' }}
+    </button>
+  </label>
+
+  <input id="lpass"
+         [type]="showPwdLogin() ? 'text' : 'password'"
+         formControlName="password"
+         autocomplete="current-password" />
+
+  <div class="error" *ngIf="lf.password.touched && lf.password.invalid">Mínimo 6 caracteres.</div>
+</div>
+
+
+    <div class="actions">
+      <button class="btn accent" type="submit" [disabled]="loading()">Entrar</button>
+      <a routerLink="/marcacao" class="btn">Continuar a explorar</a>
+    </div>
+  </form>
+
+  <!-- REGISTAR -->
+  <form *ngIf="activeTab()==='register'" [formGroup]="registerForm" (ngSubmit)="submitRegister()" class="form">
+    <div class="field">
+      <label for="rname">Nome</label>
+      <input id="rname" type="text" formControlName="name" autocomplete="name" />
+      <div class="error" *ngIf="rf.name.touched && rf.name.invalid">Nome é obrigatório.</div>
+    </div>
+
+    <div class="field">
+      <label for="rphone">Telemóvel</label>
+      <input id="rphone" type="tel" formControlName="phone" autocomplete="tel" />
+      <div class="error" *ngIf="rf.phone.touched && rf.phone.invalid">Número inválido.</div>
+    </div>
+
+    <div class="field">
+      <label for="remail">Email</label>
+      <input id="remail" type="email" formControlName="email" autocomplete="email" />
+      <div class="error" *ngIf="rf.email.touched && rf.email.invalid">Insere um email válido.</div>
+    </div>
+
+    <div class="field pwd">
+  <label for="rpass" class="pwd-label">
+    Palavra-passe
+    <button type="button"
+            class="pwd-emoji-btn"
+            (click)="showPwdReg.set(!showPwdReg())"
+            [attr.aria-pressed]="showPwdReg()"
+            [attr.aria-label]="showPwdReg() ? 'Esconder palavra-passe' : 'Mostrar palavra-passe'">
+      {{ showPwdReg() ? '🙂' : '🫣' }}
+    </button>
+  </label>
+
+  <input id="rpass"
+         [type]="showPwdReg() ? 'text' : 'password'"
+         formControlName="password"
+         autocomplete="new-password" />
+
+  <div class="error" *ngIf="rf.password.touched && rf.password.invalid">Mínimo 6 caracteres.</div>
+</div>
+
+
+    <div class="actions">
+      <button class="btn accent" type="submit" [disabled]="loading()">Criar conta</button>
+      <button type="button" class="btn ghost" (click)="switch('login')">Já tenho conta</button>
+    </div>
+  </form>
+</section>

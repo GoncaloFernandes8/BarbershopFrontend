@@ -1,0 +1,15 @@
+<h1>Serviços</h1>
+<p class="muted">Transparência e preços honestos.</p>
+<div class="grid cols-3" style="margin-top:1rem">
+  <div class="card" *ngFor="let s of services">
+    <div style="display:flex; align-items:center; justify-content:space-between">
+      <h3 style="margin:.2rem 0">{{ s.name }}</h3>
+      <span class="price">{{ s.price }}€</span>
+    </div>
+    <p class="muted">{{ s.description }}</p>
+    <span class="badge">{{ s.durationMinutes }} min</span>
+    <div style="margin-top:1rem">
+      <a routerLink="/marcacao" class="btn">Marcar</a>
+    </div>
+  </div>
+</div>

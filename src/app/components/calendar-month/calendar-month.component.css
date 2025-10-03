@@ -1,0 +1,12 @@
+.cal{display:grid; gap:.6rem}
+.cal-head{display:flex; align-items:center; justify-content:space-between}
+.cal-head .title{text-transform:capitalize; font-weight:700}
+.cal-head .btn{border-radius:10px; border:1px solid #2a3042; background:#12141a; padding:.3rem .6rem; cursor:pointer}
+.cal-grid{display:grid; grid-template-columns: repeat(7, 1fr); gap:.35rem}
+.cal-weekdays{color:#a0a7b4; font-size:.9rem}
+.day{aspect-ratio:1/1; border-radius:12px; border:1px solid #2b3143; background:#11141a; color:#e9eef7; cursor:pointer}
+.day:hover{transform: translateY(-1px)}
+.day.out{opacity:.45}
+.day.disabled{opacity:.35; cursor:not-allowed; filter:grayscale(1)}
+.day.today{outline: 1px dashed #3c445e}
+.day.selected{background:#1a1d27; border-color:#3a4157; box-shadow: inset 0 0 0 2px rgba(195,255,90,.35)}

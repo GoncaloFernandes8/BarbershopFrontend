@@ -1,0 +1,66 @@
+.auth{ max-width: 640px; margin: 1.2rem auto 0; padding: 1.25rem; }
+
+.tabs{
+  display:flex; gap:.4rem; background:#0f1117; border:1px solid #2a3042;
+  padding:.25rem; border-radius:12px; margin-bottom:.6rem;
+}
+.tab{
+  flex:1 1 0; padding:.6rem .8rem; border-radius:10px; border:0; cursor:pointer;
+  color:#cbd4e6; background:transparent; font-weight:700;
+}
+.tab.active{ color:#0f1117; background:#C3FF5A; }
+
+.form{ display:grid; gap:.9rem; margin-top:.6rem; }
+.field{ display:grid; gap:.35rem }
+label{ color:#cbd4e6 }
+input{
+  width:100%; padding:.85rem .95rem; border-radius:12px; border:1px solid #2a3042;
+  background:#12141a; color:#e9eef7; line-height:1.2;
+}
+.error{ color:#ff6b6b; font-size:.9rem; margin-top:.2rem }
+.muted.small{ font-size:.95rem }
+
+.actions{ display:flex; gap:.6rem; flex-wrap:wrap; margin-top:.2rem }
+.btn.ghost{ background: transparent; border:1px solid #2a3042; color:#e9eef7 }
+
+/* Emoji-botão: maior e centrado no campo */
+.pwd{ position:relative; }
+.pwd input{
+  /* mais espaço para o botão grande */
+  padding-right: 3.9rem;
+}
+
+/* Linha do label com emoji-botão à direita */
+.pwd-label{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:.6rem;
+}
+
+/* Botão-emoji (não absoluto) */
+.pwd-emoji-btn{
+  border:0; background:transparent; cursor:pointer;
+  font-size:1.6rem; line-height:1; padding:.1rem .2rem;
+  border-radius:8px;
+}
+.pwd-emoji-btn:hover{ transform: scale(1.06); }
+.pwd-emoji-btn:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+}
+
+/* Campo normal (já não precisa de padding extra) */
+.pwd input{ padding-right: .95rem; }
+
+/* ——— limpa regras antigas, se existirem ——— */
+.eye, .pwd .pwd-emoji{ display:none !important; }
+/* se tinhas .pwd-emoji-btn { position:absolute; ... } remove/ comenta */
+
+
+/* Em ecrã estreito, ligeiro ajuste */
+@media (max-width: 380px){
+  .pwd input{ padding-right: 3.4rem; }
+  .pwd-emoji-btn{ width:36px; height:40px; font-size:1.45rem; right:.55rem; }
+}
+
+
+

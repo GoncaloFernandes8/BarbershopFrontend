@@ -1,0 +1,81 @@
+<h1>Fazer marcação</h1>
+<p class="muted">Escolhe o serviço e reserva rapidamente no calendário.</p>
+
+<div class="grid2">
+  <div class="card">
+    <app-calendar-month
+      [month]="month()"
+      [selectedDate]="date()"
+      [minDate]="minDate"
+      [disableSundays]="true"
+      (monthChange)="month.set($event)"
+      (selectDate)="onSelectDate($event)">
+    </app-calendar-month>
+  </div>
+
+  <div class="card">
+    <app-time-slots
+      [date]="date()"
+      [slots]="slots()"
+      [selected]="time()"
+      (select)="onSelectTime($event)">
+    </app-time-slots>
+  </div>
+</div>
+
+<div class="card" style="margin-top:1rem; max-width:980px">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
+    <div class="field inline">
+      <div class="field">
+        <label for="serviceId">Serviço</label>
+        <select id="serviceId" formControlName="serviceId">
+          <option *ngFor="let s of serviceTypes" [value]="s.id">
+            {{ s.name }} — {{ s.price }}€ ({{ s.durationMinutes }}min)
+          </option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Data</label>
+        <input type="text" [value]="date()" readonly />
+      </div>
+    </div>
+
+    <div class="field inline">
+      <div class="field">
+        <label>Hora</label>
+        <input type="text" [value]="time() || '-'" readonly />
+      </div>
+      <div class="field">
+        <label for="name">Nome</label>
+        <input id="name" type="text" placeholder="O teu nome" formControlName="name" />
+        <div class="error" *ngIf="f.name.touched && f.name.invalid">Nome é obrigatório.</div>
+      </div>
+    </div>
+
+    <div class="field inline">
+      <div class="field">
+        <label for="phone">Telemóvel</label>
+        <input id="phone" type="tel" placeholder="+351 900 000 000" formControlName="phone" />
+        <div class="error" *ngIf="f.phone.touched && f.phone.invalid">Insere um número válido.</div>
+      </div>
+      <div class="field">
+        <label for="email">Email (opcional)</label>
+        <input id="email" type="email" placeholder="exemplo@dominio.pt" formControlName="email" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="note">Nota (opcional)</label>
+      <textarea id="note" rows="3" placeholder="Algum detalhe?" formControlName="note"></textarea>
+    </div>
+
+    <div style="display:flex; gap:.6rem; align-items:center">
+      <button class="btn accent" type="submit" [disabled]="submitting() || !time()">Confirmar marcação</button>
+      <span class="muted" *ngIf="submitting()">A guardar...</span>
+    </div>
+  </form>
+</div>
+
+<div style="margin-top:1.25rem" class="muted">
+  <span class="badge">Nota</span> Domingo estamos encerrados. As horas exibidas são sempre as mais recentes disponíveis.
+</div>

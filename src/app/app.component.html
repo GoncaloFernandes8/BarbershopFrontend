@@ -1,0 +1,27 @@
+<header class="header">
+  <nav class="container nav">
+    <a class="brand" routerLink="/">
+  
+  <img class="brand-logo animated" src="assets/logo-neon.gif" alt="Logo Barbearia" width="40" height="4" />
+  <span>Barbearia <span class="badge">Lavagens &amp; Cortes</span></span>
+</a>
+<div class="auth-actions">
+    <a routerLink="/login" class="btn accent small">Login</a>
+  </div>
+    <div>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Início</a>
+      <a routerLink="/servicos" routerLinkActive="active">Serviços</a>
+      <a routerLink="/marcacao" class="btn accent" style="margin-left:1rem">Marcar</a>
+    </div>
+  </nav>
+</header>
+
+<main class="container">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    © {{ year }} Barbearia — Rua Principal, 123 · (+351) 900 000 000
+  </div>
+</footer>

@@ -1,0 +1,29 @@
+<div class="cal">
+  <div class="cal-head">
+    <button class="btn" type="button" (click)="prevMonth()">‹</button>
+    <div class="title">
+      {{ month | date:'MMMM yyyy' }}
+    </div>
+    <button class="btn" type="button" (click)="nextMonth()">›</button>
+  </div>
+
+  <div class="cal-grid cal-weekdays">
+    <div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div><div>Dom</div>
+  </div>
+
+  <div class="cal-grid">
+    <ng-container *ngFor="let week of weeks">
+      <ng-container *ngFor="let d of week">
+        <button class="day"
+                [class.out]="!d.inMonth"
+                [class.today]="d.isToday"
+                [class.disabled]="d.disabled"
+                [class.selected]="d.selected"
+                type="button"
+                (click)="select(d)">
+          {{ d.label }}
+        </button>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

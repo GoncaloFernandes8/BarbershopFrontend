@@ -1,0 +1,22 @@
+<div class="slots">
+  <div class="slots-head">
+    <div>
+      <div class="muted" style="font-size:.9rem">Dia</div>
+      <div><strong>{{ date | date:'EEEE, d \'de\' MMMM' }}</strong></div>
+    </div>
+  </div>
+
+  <div *ngIf="slots.length; else noSlots" class="grid">
+    <button type="button"
+            class="slot"
+            *ngFor="let t of slots"
+            [class.active]="t === selected"
+            (click)="onPick(t)">
+      {{ t }}
+    </button>
+  </div>
+
+  <ng-template #noSlots>
+    <p class="muted">Sem horários disponíveis neste dia.</p>
+  </ng-template>
+</div>

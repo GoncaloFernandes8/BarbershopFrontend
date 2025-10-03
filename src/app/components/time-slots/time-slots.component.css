@@ -1,0 +1,5 @@
+.slots{display:grid; gap:.6rem}
+.grid{display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:.5rem}
+@media (max-width:920px){ .grid{ grid-template-columns: 1fr 1fr } }
+.slot{padding:.7rem .8rem; border-radius:10px; border:1px solid #2b3143; background:#11141a; color:#e9eef7; cursor:pointer}
+.slot.active{background:#1a1d27; border-color:#3a4157; box-shadow: inset 0 0 0 2px rgba(195,255,90,.35)}

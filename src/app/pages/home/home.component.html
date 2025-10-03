@@ -1,0 +1,170 @@
+<section class="hero">
+  <div class="card">
+    <span class="badge">Barbearia</span>
+    <h1>Estilo que fala por si.</h1>
+    <p class="muted">Cortes clássicos e modernos, barba no ponto e boa conversa. Marca já a tua hora.</p>
+    <div style="margin-top:1rem; display:flex; gap:.6rem; flex-wrap:wrap">
+      <a routerLink="/marcacao" class="btn accent">Marcar agora</a>
+      <a routerLink="/servicos" class="btn">Ver serviços</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Horário</h2>
+    <p>Seg–Sáb · 09:00–19:00</p>
+    <p class="muted">Domingo encerrado</p>
+    <hr style="border-color:#262c3d; margin:1rem 0" />
+    <h2>Contactos</h2>
+    <p>📞 (+351) 900 000 000</p>
+    <p>📍 Rua Principal, 123</p>
+  </div>
+</section>
+
+<!-- Promo -->
+<section class="promo card">
+  <div class="promo-copy">
+    <span class="badge">Promo</span>
+    <strong>Primeira visita -10%</strong>
+    <span class="muted">usa o código <code>PRIMEIROCORTE</code> ao marcar</span>
+  </div>
+  <a routerLink="/marcacao" class="btn accent">Aproveitar</a>
+</section>
+
+<section class="grid cols-3">
+  <div class="card">
+    <h3>Profissionalismo</h3>
+    <p class="muted">Experiência e atenção ao detalhe em cada corte.</p>
+    <img
+      src="assets/professionalism.jpg"
+      alt="Cabeleireiro a cortar cabelo"
+      loading="lazy"
+    />
+  </div>
+  <div class="card">
+    <h3>Produtos de Qualidade</h3>
+    <p class="muted">Usamos marcas premium para cabelo e barba.</p>
+    <img
+      src="assets/quality-products.jpg"
+      alt="Produtos de cabelo e barba"
+      loading="lazy"
+    />
+  </div>
+  <div class="card">
+    <h3>Ambiente Top</h3>
+    <p class="muted">Música, conversa e boa energia na barbearia!</p>
+    <img
+      src="assets/top-ambience.jpg"
+      alt="Ambiente da barbearia"
+      loading="lazy"
+    />
+  </div>
+</section>
+
+<!-- Divisor “barber pole” -->
+<div class="divider barber-pole" aria-hidden="true"></div>
+
+<!-- Barber Feature -->
+<section class="barber-feature">
+  <div class="bf-photo">
+    <div class="frame">
+      <img src="assets/barber.jpg" alt="João Silva, Barbeiro" class="photo" loading="lazy" />
+      <span class="stamp">Barbeiro</span>
+    </div>
+  </div>
+
+  <div class="bf-copy">
+    <span class="eyebrow">Conhece o artista</span>
+    <h2 class="title">João <span>Silva</span></h2>
+    <p class="blurb">
+      Fades precisos, clássicos com personalidade e barba no ponto. 15+ anos a ouvir primeiro
+      e a criar depois — porque o corte tem de falar por ti.
+    </p>
+
+    <ul class="chips">
+      <li>Fade</li><li>Clássico</li><li>Beard &amp; Line-up</li><li>Kids</li>
+    </ul>
+
+    <div class="marquee">
+      <div class="track">
+        <span>Skin Fade</span><span>Tesoura</span><span>Toalha Quente</span>
+        <span>Pomada Matte</span><span>Navalha</span><span>Styling</span>
+      </div>
+    </div>
+
+    <!-- Meta do barbeiro -->
+    <ul class="meta">
+      <li><strong>15+</strong><span>Anos</span></li>
+      <li><strong>4.9★</strong><span>Média</span></li>
+      <li><strong>10k+</strong><span>Clientes</span></li>
+    </ul>
+
+    <div class="ctas">
+      <p class="muted">Marca já a tua hora com o João.</p>
+      <a routerLink="/marcacao" class="btn accent">Marcar com João</a>
+      <a routerLink="/servicos" class="btn ghost">Ver serviços</a>
+    </div>
+  </div>
+</section>
+
+<section class="card testimonials">
+  <h2>Avaliações</h2>
+  <div class="t-grid">
+    <figure class="t">
+      <div class="stars" aria-label="5 em 5">★★★★★</div>
+      <blockquote>“O João acertou no corte à primeira. Voltarei!”</blockquote>
+      <figcaption>— Rui M.</figcaption>
+    </figure>
+    <figure class="t">
+      <div class="stars">★★★★★</div>
+      <blockquote>“Fade perfeito e barba impecável. Top!”</blockquote>
+      <figcaption>— Rui G.</figcaption>
+    </figure>
+    <figure class="t">
+      <div class="stars">★★★★☆</div>
+      <blockquote>“Ambiente incrível e atenção ao detalhe.”</blockquote>
+      <figcaption>— Miguel T.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="card before-after">
+  <div class="ba-copy">
+    <h2>Antes &amp; Depois</h2>
+    <p class="muted">Move o rato para ver a transformação.</p>
+  </div>
+  <div class="ba-frame">
+    <img src="assets/antes.jpg" alt="Antes"  class="ba before" />
+    <img src="assets/depois.jpg"    alt="Depois" class="ba after"  />
+  </div>
+</section>
+
+<section class="card faq">
+  <h2>Perguntas frequentes</h2>
+  <details>
+    <summary>Posso ir sem marcação?</summary>
+    <p class="muted">Recomendamos marcar. Se houver vaga, atendemos walk-in.</p>
+  </details>
+  <details>
+    <summary>Cancelamentos/tolerâncias?</summary>
+    <p class="muted">Podes cancelar até 2h antes. Há tolerância de 10 min.</p>
+  </details>
+  <details>
+    <summary>Formas de pagamento?</summary>
+    <p class="muted">MBWay, multibanco e dinheiro.</p>
+  </details>
+</section>
+
+<section class="card map">
+  <h2>Vem conhecer-nos!!</h2>
+  <div class="map-embed">
+    <iframe
+      src="https://www.google.com/maps?q=Rua%20Principal%2C%20123&output=embed"
+      loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen
+    ></iframe>
+  </div>
+  <div class="map-ctas">
+    <a class="btn" href="https://www.google.com/maps?q=Rua%20Principal%2C%20123" target="_blank" rel="noopener">Abrir no Maps</a>
+    <a class="btn" href="tel:+351900000000">Ligar</a>
+    <a class="btn" href="https://wa.me/351900000000" target="_blank" rel="noopener">WhatsApp</a>
+  </div>
+</section>
