@@ -1,89 +1,128 @@
 <section class="auth card">
   <div class="tabs">
-    <button class="tab" [class.active]="activeTab()==='login'" (click)="switch('login')">Entrar</button>
+    <button class="tab" [class.active]="activeTab()==='login'" (click)="switch('login')">Login</button>
     <button class="tab" [class.active]="activeTab()==='register'" (click)="switch('register')">Criar conta</button>
   </div>
 
   <p class="muted small" *ngIf="note()">{{ note() }}</p>
 
   <!-- LOGIN -->
-  <form *ngIf="activeTab()==='login'" [formGroup]="loginForm" (ngSubmit)="submitLogin()" class="form">
+  <form *ngIf="activeTab()==='login'"
+        [formGroup]="loginForm"
+        (ngSubmit)="submitLogin()"
+        class="form">
+
     <div class="field">
       <label for="lemail">Email</label>
-      <input id="lemail" type="email" formControlName="email" autocomplete="email" />
-      <div class="error" *ngIf="lf.email.touched && lf.email.invalid">Insere um email válido.</div>
+      <input id="lemail"
+             type="email"
+             formControlName="email"
+             autocomplete="email"
+             required />
+      <div class="error" *ngIf="lf.email.touched && lf.email.invalid">
+        Insere um email válido.
+      </div>
     </div>
 
-   <div class="field pwd">
-  <label for="lpass" class="pwd-label">
-    Palavra-passe
-    <button type="button"
-            class="pwd-emoji-btn"
-            (click)="showPwdLogin.set(!showPwdLogin())"
-            [attr.aria-pressed]="showPwdLogin()"
-            [attr.aria-label]="showPwdLogin() ? 'Esconder palavra-passe' : 'Mostrar palavra-passe'">
-      {{ showPwdLogin() ? '🙂' : '🫣' }}
-    </button>
-  </label>
+    <div class="field pwd">
+      <label for="lpass" class="pwd-label">
+        Palavra-passe
+        <button type="button"
+                class="pwd-emoji-btn"
+                (click)="showPwdLogin.set(!showPwdLogin())"
+                [attr.aria-pressed]="showPwdLogin()"
+                [attr.aria-controls]="'lpass'"
+                [attr.aria-label]="showPwdLogin() ? 'Esconder palavra-passe' : 'Mostrar palavra-passe'">
+          <img [src]="showPwdLogin() ? 'assets/feliz.png' : 'assets/taparolho.png'"
+               alt=""
+               class="pwd-icon" />
+        </button>
+      </label>
 
-  <input id="lpass"
-         [type]="showPwdLogin() ? 'text' : 'password'"
-         formControlName="password"
-         autocomplete="current-password" />
+      <input id="lpass"
+             [type]="showPwdLogin() ? 'text' : 'password'"
+             formControlName="password"
+             autocomplete="current-password"
+             required />
+      <div class="error" *ngIf="lf.password.touched && lf.password.invalid">
+        Mínimo 6 caracteres.
+      </div>
+    </div>
 
-  <div class="error" *ngIf="lf.password.touched && lf.password.invalid">Mínimo 6 caracteres.</div>
-</div>
-
+    <!-- opcional: lembrar sessão -->
+    <!--
+    <label class="checkbox small">
+      <input type="checkbox" formControlName="remember" />
+      Lembrar-me neste dispositivo
+    </label>
+    -->
 
     <div class="actions">
-      <button class="btn accent" type="submit" [disabled]="loading()">Entrar</button>
-      <a routerLink="/marcacao" class="btn">Continuar a explorar</a>
+      <button class="btn accent" type="submit" [disabled]="loading()">
+        {{ loading() ? 'A entrar…' : 'Entrar' }}
+      </button>
     </div>
   </form>
 
   <!-- REGISTAR -->
-  <form *ngIf="activeTab()==='register'" [formGroup]="registerForm" (ngSubmit)="submitRegister()" class="form">
+  <form *ngIf="activeTab()==='register'"
+        [formGroup]="registerForm"
+        (ngSubmit)="submitRegister()"
+        class="form">
+
     <div class="field">
       <label for="rname">Nome</label>
-      <input id="rname" type="text" formControlName="name" autocomplete="name" />
-      <div class="error" *ngIf="rf.name.touched && rf.name.invalid">Nome é obrigatório.</div>
+      <input id="rname" type="text" formControlName="name" autocomplete="name" required />
+      <div class="error" *ngIf="rf.name.touched && rf.name.invalid">
+        Nome é obrigatório.
+      </div>
     </div>
 
     <div class="field">
       <label for="rphone">Telemóvel</label>
-      <input id="rphone" type="tel" formControlName="phone" autocomplete="tel" />
-      <div class="error" *ngIf="rf.phone.touched && rf.phone.invalid">Número inválido.</div>
+      <input id="rphone" type="tel" formControlName="phone" autocomplete="tel" required />
+      <div class="error" *ngIf="rf.phone.touched && rf.phone.invalid">
+        Número inválido.
+      </div>
     </div>
 
     <div class="field">
       <label for="remail">Email</label>
-      <input id="remail" type="email" formControlName="email" autocomplete="email" />
-      <div class="error" *ngIf="rf.email.touched && rf.email.invalid">Insere um email válido.</div>
+      <input id="remail" type="email" formControlName="email" autocomplete="email" required />
+      <div class="error" *ngIf="rf.email.touched && rf.email.invalid">
+        Insere um email válido.
+      </div>
     </div>
 
     <div class="field pwd">
-  <label for="rpass" class="pwd-label">
-    Palavra-passe
-    <button type="button"
-            class="pwd-emoji-btn"
-            (click)="showPwdReg.set(!showPwdReg())"
-            [attr.aria-pressed]="showPwdReg()"
-            [attr.aria-label]="showPwdReg() ? 'Esconder palavra-passe' : 'Mostrar palavra-passe'">
-      {{ showPwdReg() ? '🙂' : '🫣' }}
-    </button>
-  </label>
+      <label for="rpass" class="pwd-label">
+        Palavra-passe
+        <button type="button"
+                class="pwd-emoji-btn"
+                (click)="showPwdReg.set(!showPwdReg())"
+                [attr.aria-pressed]="showPwdReg()"
+                [attr.aria-controls]="'rpass'"
+                [attr.aria-label]="showPwdReg() ? 'Esconder palavra-passe' : 'Mostrar palavra-passe'">
+          <img [src]="showPwdReg() ? 'assets/feliz.png' : 'assets/taparolho.png'"
+               alt=""
+               class="pwd-icon" />
+        </button>
+      </label>
 
-  <input id="rpass"
-         [type]="showPwdReg() ? 'text' : 'password'"
-         formControlName="password"
-         autocomplete="new-password" />
-
-  <div class="error" *ngIf="rf.password.touched && rf.password.invalid">Mínimo 6 caracteres.</div>
-</div>
-
+      <input id="rpass"
+             [type]="showPwdReg() ? 'text' : 'password'"
+             formControlName="password"
+             autocomplete="new-password"
+             required />
+      <div class="error" *ngIf="rf.password.touched && rf.password.invalid">
+        Mínimo 6 caracteres.
+      </div>
+    </div>
 
     <div class="actions">
-      <button class="btn accent" type="submit" [disabled]="loading()">Criar conta</button>
+      <button class="btn accent" type="submit" [disabled]="loading()">
+        {{ loading() ? 'A enviar…' : 'Criar conta' }}
+      </button>
       <button type="button" class="btn ghost" (click)="switch('login')">Já tenho conta</button>
     </div>
   </form>

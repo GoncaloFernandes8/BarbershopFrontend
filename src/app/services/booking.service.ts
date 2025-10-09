@@ -1,75 +1,71 @@
-import { Injectable } from '@angular/core';
-import { Booking } from '../models/booking.model';
-import { SERVICE_TYPES } from '../models/service-type.model';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
+
+const API = 'https://due-constancia-goncalo-6b7726ec.koyeb.app';
+
+export type ServiceDto = {
+  id: number; name: string; durationMin: number; bufferAfterMin: number;
+  priceCents: number; active: boolean;
+};
+
+
+export type AppointmentDto = {
+  id: number;
+  barberId: number;
+  serviceId: number;
+  clientId: number;
+  startsAt: string;   // ISO (pode vir com Z)
+  endsAt?: string;
+  notes?: string;
+};
+export type BarberDto = {
+  id: number; name: string; active: boolean; createdAt: string;
+};
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {
-  private STORAGE_KEY = 'bb_bookings_v1';
+  private http = inject(HttpClient);
 
-  getAll(): Booking[] {
-    const raw = localStorage.getItem(this.STORAGE_KEY);
-    return raw ? JSON.parse(raw) as Booking[] : [];
+  // 👇 NOVO: buscar appointment por id
+  getAppointmentById(id: number) {
+    return this.http.get<AppointmentDto>(`${API}/appointments/${id}`);
   }
 
-  getById(id: string): Booking | undefined {
-    return this.getAll().find(b => b.id === id);
+
+  // 👇 (existe no teu backend) obter serviço por id
+  getServiceById(id: number) {
+    return this.http.get<ServiceDto>(`${API}/services/${id}`);
   }
 
-  add(b: Omit<Booking, 'id' | 'createdAt' | 'serviceName' | 'price'>): Booking {
-    const service = SERVICE_TYPES.find(s => s.id === b.serviceId)!;
-    const booking: Booking = {
-      ...b,
-      serviceName: service.name,
-      price: service.price,
-      id: (globalThis.crypto && 'randomUUID' in globalThis.crypto) ? crypto.randomUUID() : String(Date.now()),
-      createdAt: new Date().toISOString(),
-    };
-    const all = this.getAll();
-    all.push(booking);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(all));
-    return booking;
+  getServices(): Observable<ServiceDto[]> {
+    return this.http.get<ServiceDto[]>(`${API}/services`);
   }
 
-  delete(id: string): void {
-    const all = this.getAll().filter(b => b.id !== id);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(all));
+  // 👇 não sei se tens GET /barbers/{id}; seguro: carrega todos e encontra localmente
+  getBarberById(id: number) {
+    return this.getBarbers().pipe(
+      map(list => list.find(b => b.id === id)!)
+    );
   }
-
-  /** 09:00–19:00 (última marcação às 18:30). Domingo fechado. */
-  getDailySlots(dateStr: string): string[] {
-    const date = new Date(dateStr + 'T00:00:00');
-    const day = date.getDay(); // 0=Domingo
-    if (day === 0) return [];
-    const slots: string[] = [];
-    const startMinutes = 9 * 60;
-    const endMinutes = 19 * 60;
-    for (let m = startMinutes; m <= endMinutes - 30; m += 30) {
-      const hh = String(Math.floor(m/60)).padStart(2,'0');
-      const mm = String(m % 60).padStart(2,'0');
-      slots.push(`${hh}:${mm}`);
-    }
-    // Se for hoje, remove horas já passadas
-    const today = new Date();
-    const ymd = today.toISOString().slice(0,10);
-    if (dateStr === ymd) {
-      const nowMins = today.getHours()*60 + today.getMinutes();
-      return slots.filter(t => {
-        const [h,mi] = t.split(':').map(Number);
-        const mins = h*60 + mi;
-        return mins > nowMins;
-      });
-    }
-    return slots;
+  
+  getBarbers(): Observable<BarberDto[]> {
+    return this.http.get<BarberDto[]>(`${API}/barbers`);
   }
-
-  /** devolve as horas livres (exclui as já ocupadas) */
-  getAvailableSlots(dateStr: string): string[] {
-    const taken = new Set(this.getAll().filter(b => b.date === dateStr).map(b => b.time));
-    return this.getDailySlots(dateStr).filter(t => !taken.has(t));
+  getAvailability(barberId: number, serviceId: number, ymd: string): Observable<string[]> {
+    return this.http.get<string[]>(`${API}/availability`, { params: { barberId, serviceId, date: ymd } });
   }
-
-  /** verifica se um slot está livre */
-  isSlotAvailable(dateStr: string, time: string): boolean {
-    return this.getAvailableSlots(dateStr).includes(time);
+  createAppointment(payload: {
+    barberId: number; serviceId: number; clientId: number; startsAt: string; notes?: string;
+  }): Observable<number> {
+    return this.http.post(`${API}/appointments`, payload, { observe: 'response' }).pipe(
+      map((res: HttpResponse<any>) => {
+        const id = res.body?.id ?? res.body?.appointmentId;
+        if (id) return Number(id);
+        const loc = res.headers.get('Location') || res.headers.get('location');
+        const m = loc?.match(/\/(\d+)(?:\?.*)?$/);
+        return m ? Number(m[1]) : 0;
+      })
+    );
   }
 }

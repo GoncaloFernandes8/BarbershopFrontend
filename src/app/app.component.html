@@ -1,13 +1,20 @@
 <header class="header">
   <nav class="container nav">
     <a class="brand" routerLink="/">
-  
-  <img class="brand-logo animated" src="assets/logo-neon.gif" alt="Logo Barbearia" width="40" height="4" />
-  <span>Barbearia <span class="badge">Lavagens &amp; Cortes</span></span>
-</a>
-<div class="auth-actions">
-    <a routerLink="/login" class="btn accent small">Login</a>
-  </div>
+      <img class="brand-logo animated" src="assets/logo-neon.gif" alt="Logo Barbearia" width="40" height="4" />
+      <span>Barbearia <span class="badge">Lavagens &amp; Cortes</span></span>
+    </a>
+
+    <div class="auth-actions">
+      <!-- mostra Login só na HOME e quando NÃO está autenticado -->
+      <a *ngIf="isHome && !isLoggedIn" routerLink="/login" class="btn accent small">Login</a>
+
+      <!-- depois de logar, mostra a saudação -->
+      <span *ngIf="isLoggedIn" class="welcome small">Olá {{ userName }}!</span>
+      <!-- (opcional) botão sair -->
+      <button *ngIf="isLoggedIn" class="btn ghost small" (click)="logout()">Sair</button>
+    </div>
+
     <div>
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Início</a>
       <a routerLink="/servicos" routerLinkActive="active">Serviços</a>

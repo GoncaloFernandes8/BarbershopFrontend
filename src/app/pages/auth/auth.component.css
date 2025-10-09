@@ -64,3 +64,19 @@ input{
 
 
 
+.pwd-emoji-btn {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin-left: .5rem;
+  cursor: pointer;
+  line-height: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.pwd-icon {
+  width: 40px;    /* ajusta ao teu gosto */
+  height: 40px;
+  display: block;
+}

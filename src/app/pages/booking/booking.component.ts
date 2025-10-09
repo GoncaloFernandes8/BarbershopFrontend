@@ -1,81 +1,108 @@
-import { Component, signal, effect, inject, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { BookingService } from '../../services/booking.service';
-import { SERVICE_TYPES } from '../../models/service-type.model';
+import { FormsModule } from '@angular/forms';
+
 import { CalendarMonthComponent } from '../../components/calendar-month/calendar-month.component';
 import { TimeSlotsComponent } from '../../components/time-slots/time-slots.component';
 
-function toYYYYMM(d: Date){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
-function todayStr(){ return new Date().toISOString().slice(0,10); }
+import { BookingService, ServiceDto, BarberDto } from '../../services/booking.service';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-booking',
-  imports: [CommonModule, ReactiveFormsModule, CalendarMonthComponent, TimeSlotsComponent],
+  imports: [CommonModule, FormsModule, CalendarMonthComponent, TimeSlotsComponent],
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.css']
 })
-export class BookingComponent {
-  private booking = inject(BookingService);
-  private fb = inject(FormBuilder);
+export class BookingComponent implements OnInit {
+  private api = inject(BookingService);
+  private auth = inject(AuthService);
   private router = inject(Router);
-  minDate = todayStr();
-  // Calendar state
-  month = signal<string>(toYYYYMM(new Date()));
-  date = signal<string>(todayStr());
-  slots = computed(() => this.booking.getAvailableSlots(this.date()));
-  time = signal<string>('');
 
-  serviceTypes = SERVICE_TYPES;
-  submitting = signal(false);
+  // dropdowns
+  services = signal<ServiceDto[]>([]);
+  barbers  = signal<BarberDto[]>([]);
+  selectedServiceId = signal<number | null>(null);
+  selectedBarberId  = signal<number | null>(null);
 
-  form = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    phone: ['', [Validators.required, Validators.pattern(/^\+?\d[\d\s]{6,}$/)]],
-    email: ['', [Validators.email]],
-    serviceId: [SERVICE_TYPES[0].id, Validators.required],
-    date: [this.date(), Validators.required],
-    time: [this.time(), Validators.required],
-    note: ['']
-  });
+  // calendário
+  todayYmd = toYmd(new Date());
+  month = signal<string>(this.todayYmd.slice(0, 7));   // YYYY-MM
+  selectedDate = signal<string | null>(this.todayYmd); // YYYY-MM-DD
 
-  syncEffect = effect(() => {
-    // keep reactive form in sync with calendar/time selections
-    const d = this.date();
-    const t = this.time();
-    if (this.form.controls.date.value !== d) this.form.controls.date.setValue(d);
-    if (this.form.controls.time.value !== t) this.form.controls.time.setValue(t);
-  });
+  // slots
+  slots = signal<string[]>([]);
+  selectedSlot = signal<string | null>(null);
+  loadingSlots = signal<boolean>(false);
+  note = signal<string | null>(null);
 
-  get f() { return this.form.controls; }
-
-  onSelectDate(d: string){
-    this.date.set(d);
-    this.time.set(''); // reset time when date changes
-  }
-
-  onSelectTime(t: string){
-    this.time.set(t);
-  }
-
-  onSubmit(){
-    if (this.form.invalid || !this.time()) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    const value = this.form.getRawValue();
-    if (!this.booking.isSlotAvailable(value.date!, value.time!)) {
-      alert('Esse horário acabou de ficar indisponível. Escolhe outro, por favor.');
-      this.time.set('');
-      return;
-    }
-    this.submitting.set(true);
-    const created = this.booking.add({
-      name: value.name!, phone: value.phone!, email: value.email ?? undefined,
-      serviceId: value.serviceId!, date: value.date!, time: value.time!
+  ngOnInit(): void {
+    this.api.getBarbers().subscribe(list => {
+      const active = list.filter(b => b.active);
+      this.barbers.set(active);
+      if (!this.selectedBarberId() && active.length) this.selectedBarberId.set(active[0].id);
+      this.loadAvailability();
     });
-    this.router.navigate(['/sucesso', created.id]);
+
+    this.api.getServices().subscribe(list => {
+      const active = list.filter(s => s.active);
+      this.services.set(active);
+      if (!this.selectedServiceId() && active.length) this.selectedServiceId.set(active[0].id);
+      this.loadAvailability();
+    });
   }
+
+  onMonthChange(ym: string) {
+    this.month.set(ym);
+  }
+
+  onSelectDate(ymd: string) {
+    this.selectedDate.set(ymd);
+    this.selectedSlot.set(null);
+    this.loadAvailability();
+  }
+
+  onPickSlot(iso: string) {
+    this.selectedSlot.set(iso);
+    this.note.set(null);
+  }
+
+  loadAvailability() {
+    const b = this.selectedBarberId(), s = this.selectedServiceId(), d = this.selectedDate();
+    if (!b || !s || !d) return;
+
+    this.loadingSlots.set(true);
+    this.api.getAvailability(b, s, d).subscribe({
+      next: list => { this.slots.set(list); this.loadingSlots.set(false); },
+      error: () => { this.slots.set([]); this.loadingSlots.set(false); }
+    });
+  }
+
+  canSubmit = computed(() => !!this.selectedBarberId() && !!this.selectedServiceId() && !!this.selectedDate() && !!this.selectedSlot());
+
+  book() {
+    if (!this.canSubmit()) return;
+    const u = this.auth.user;
+    if (!u?.id) { this.note.set('Tens de iniciar sessão para marcar.'); return; }
+
+    this.api.createAppointment({
+      barberId: this.selectedBarberId()!,
+      serviceId: this.selectedServiceId()!,
+      clientId: Number(u.id),
+      startsAt: this.selectedSlot()!,   // ISO vindo do /availability (pode vir com Z)
+      notes: ''
+    }).subscribe({
+      next: id => this.router.navigate(['/sucesso', id || 'ok']),
+      error: err => this.note.set(err?.status === 409
+        ? 'Esse horário ficou indisponível. Escolhe outro, por favor.'
+        : 'Não foi possível criar a marcação.')
+    });
+  }
+}
+
+function toYmd(d: Date) {
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
 }

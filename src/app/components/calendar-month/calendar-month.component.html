@@ -2,7 +2,7 @@
   <div class="cal-head">
     <button class="btn" type="button" (click)="prevMonth()">‹</button>
     <div class="title">
-      {{ month | date:'MMMM yyyy' }}
+      {{ monthDate | date:'MMMM yyyy' : timezone : locale }}
     </div>
     <button class="btn" type="button" (click)="nextMonth()">›</button>
   </div>

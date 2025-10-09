@@ -1,13 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router'; // <— RouterLink aqui
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   standalone: true,
   selector: 'app-auth',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule], // <— removido RouterLink
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
@@ -36,28 +36,24 @@ export class AuthComponent {
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
-  ngOnInit(){
-  const tabFromData = this.route.snapshot.data['tab'] as 'login'|'register'|undefined;
-  if (tabFromData) {
-    this.activeTab.set(tabFromData);
-  } else {
-    const tab = this.route.snapshot.queryParamMap.get('tab');
-    if (tab === 'register') this.activeTab.set('register');
+  ngOnInit() {
+    const tabFromData = this.route.snapshot.data['tab'] as 'login'|'register'|undefined;
+    if (tabFromData) this.activeTab.set(tabFromData);
+    else if (this.route.snapshot.queryParamMap.get('tab') === 'register') this.activeTab.set('register');
   }
-}
 
   switch(tab: 'login'|'register'){ this.activeTab.set(tab); this.note.set(null); }
 
   submitLogin(){
     if (this.loginForm.invalid) { this.loginForm.markAllAsTouched(); return; }
     this.loading.set(true);
-    this.auth.login(this.loginForm.getRawValue()).subscribe({
+
+    // <<< só envia email+password >>>
+    const { email, password } = this.loginForm.getRawValue();
+    this.auth.login({ email, password }).subscribe({
       next: (res) => {
-        if (res.user.status === 'PENDING') {
-          this.note.set('Conta criada mas a aguardar aprovação do barbeiro.');
-        } else {
-          this.router.navigateByUrl('/marcacao');
-        }
+        if (res.user.status === 'PENDING') this.note.set('Conta criada mas a aguardar aprovação do barbeiro.');
+        else this.router.navigateByUrl('/marcacao');
         this.loading.set(false);
       },
       error: (err) => {
@@ -72,11 +68,8 @@ export class AuthComponent {
     this.loading.set(true);
     this.auth.register(this.registerForm.getRawValue()).subscribe({
       next: (res) => {
-        if (res.requiresEmailVerification) {
-          this.note.set('Verifica o teu email para confirmar a conta.');
-        } else {
-          this.note.set('Registo submetido. Aguardando aprovação do barbeiro.');
-        }
+        if (res.requiresEmailVerification) this.note.set('Verifica o teu email para confirmar a conta.');
+        else this.note.set('Registo submetido. Aguardando aprovação do barbeiro.');
         this.activeTab.set('login');
         this.loading.set(false);
       },
@@ -87,7 +80,6 @@ export class AuthComponent {
     });
   }
 
-  // Getters práticos
   get lf(){ return this.loginForm.controls; }
   get rf(){ return this.registerForm.controls; }
 }

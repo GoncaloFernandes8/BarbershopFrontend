@@ -3,7 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 
 type DayCell = {
   dateStr: string; // YYYY-MM-DD
-  label: number;   // day number
+  label: number;
   inMonth: boolean;
   disabled: boolean;
   isToday: boolean;
@@ -11,12 +11,15 @@ type DayCell = {
 };
 
 function toDateStr(d: Date): string {
-  return d.toISOString().slice(0,10);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
 }
 
 function parseYYYYMM(ym: string): Date {
   const [y, m] = ym.split('-').map(Number);
-  return new Date(y, m-1, 1);
+  return new Date(y, m - 1, 1);
 }
 
 @Component({
@@ -36,8 +39,16 @@ export class CalendarMonthComponent {
   /** Disable Sundays (barbearia encerrada) */
   @Input() disableSundays = true;
 
+  /** Locale e TZ usados nos pipes do título */
+  @Input() locale = 'pt-PT';
+  @Input() timezone = 'Europe/Lisbon';
+
   @Output() monthChange = new EventEmitter<string>(); // emits YYYY-MM
   @Output() selectDate = new EventEmitter<string>();  // emits YYYY-MM-DD
+
+  get monthDate(): Date {
+    return parseYYYYMM(this.month);
+  }
 
   get weeks(): DayCell[][] {
     const first = parseYYYYMM(this.month);
@@ -45,9 +56,10 @@ export class CalendarMonthComponent {
     const todayStr = toDateStr(new Date());
     const minDate = this.minDate ?? todayStr;
     const start = new Date(firstDay);
-    // Start on Monday
-    const jsDay = firstDay.getDay(); // 0=Sun..6=Sat
-    const diffToMonday = (jsDay + 6) % 7; // Mon=0, Tue=1,... Sun=6
+
+    // começar na segunda-feira
+    const jsDay = firstDay.getDay(); // 0=Dom..6=Sáb
+    const diffToMonday = (jsDay + 6) % 7; // Seg=0, Ter=1,... Dom=6
     start.setDate(firstDay.getDate() - diffToMonday);
 
     const days: DayCell[] = [];
@@ -68,29 +80,26 @@ export class CalendarMonthComponent {
         selected: this.selectedDate === dateStr
       });
     }
-    // group by weeks of 7
     const weeks: DayCell[][] = [];
-    for (let i = 0; i < days.length; i += 7) {
-      weeks.push(days.slice(i, i+7));
-    }
+    for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
     return weeks;
   }
 
-  prevMonth(){
+  prevMonth() {
     const d = parseYYYYMM(this.month);
     d.setMonth(d.getMonth() - 1);
-    const ym = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
     this.monthChange.emit(ym);
   }
 
-  nextMonth(){
+  nextMonth() {
     const d = parseYYYYMM(this.month);
     d.setMonth(d.getMonth() + 1);
-    const ym = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
     this.monthChange.emit(ym);
   }
 
-  select(day: DayCell){
+  select(day: DayCell) {
     if (day.disabled) return;
     this.selectDate.emit(day.dateStr);
   }

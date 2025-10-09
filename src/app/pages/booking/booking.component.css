@@ -1,3 +1,10 @@
 .grid2{display:grid; grid-template-columns: 1.1fr 1fr; gap:1rem}
 @media (max-width: 1020px){ .grid2{ grid-template-columns: 1fr } }
 .form .error{margin-top:.2rem}
+
+.row { display: flex; gap: 1rem; flex-wrap: wrap; }
+.field { display: flex; flex-direction: column; gap: .25rem; min-width: 220px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+.actions { margin-top: 1rem; }
+.welcome { margin-left: .5rem; }

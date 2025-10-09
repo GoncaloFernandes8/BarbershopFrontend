@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { tap, map, delay } from 'rxjs/operators';
+import { Observable, tap, map } from 'rxjs';
 
 
 export type LoginPayload = { email: string; password: string };
@@ -20,22 +19,19 @@ export type RegisterResponse = { user: AuthUser; requiresEmailVerification?: boo
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
-  private API = 'https://localhost:8080'; // substitui pelo teu backend
+  private API = 'https://due-constancia-goncalo-6b7726ec.koyeb.app';
 
-  /** BACKEND A EXISTIR: POST /auth/login
-   *  Por agora fica um stub local só para poderes testar o UI. */
   login(data: LoginPayload): Observable<LoginResponse> {
-    const saved = localStorage.getItem('auth_user');
-    if (saved) {
-      const user = JSON.parse(saved) as AuthUser;
-      return of({ token: 'dev-token', user }).pipe(delay(300));
-    }
-    return throwError(() => ({ error: { message: 'Sem conta guardada. Faz registo primeiro.' } }));
+    return this.http.post<LoginResponse>(`${this.API}/auth/login`, data).pipe(
+      tap(res => {
+        localStorage.setItem('auth_token', res.token);
+        localStorage.setItem('auth_user', JSON.stringify(res.user));
+      })
+    );
   }
 
-  /** Usa o que existe no teu backend: POST /clients { name, phone } */
   register(data: RegisterPayload): Observable<RegisterResponse> {
-    const payload = { name: data.name, phone: data.phone }; // o teu Java só pede isto
+    const payload = { name: data.name, phone: data.phone, email: data.email, password: data.password };
     return this.http.post<any>(`${this.API}/clients`, payload).pipe(
       map((client: any) => {
         const user: AuthUser = {

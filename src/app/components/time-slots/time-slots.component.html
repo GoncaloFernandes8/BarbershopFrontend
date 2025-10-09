@@ -2,21 +2,32 @@
   <div class="slots-head">
     <div>
       <div class="muted" style="font-size:.9rem">Dia</div>
-      <div><strong>{{ date | date:'EEEE, d \'de\' MMMM' }}</strong></div>
+      <div><strong>{{ dateObj | date:"EEEE, d 'de' MMMM":timezone:locale }}</strong></div>
     </div>
   </div>
 
-  <div *ngIf="slots.length; else noSlots" class="grid">
-    <button type="button"
-            class="slot"
-            *ngFor="let t of slots"
-            [class.active]="t === selected"
-            (click)="onPick(t)">
-      {{ t }}
+  <!-- 1) LOADING -->
+  <div class="loading" *ngIf="loading">
+    <div class="spinner" role="status" aria-live="polite" aria-label="A carregar horários">
+      <span class="sr-only">A carregar…</span>
+    </div>
+  </div>
+
+  <!-- 2) TEM SLOTS -->
+  <div class="grid" *ngIf="!loading && slotItems.length > 0">
+    <button
+      type="button"
+      class="slot"
+      *ngFor="let s of slotItems"
+      [class.active]="s.iso === selected"
+      (click)="onPick(s.iso)">
+      {{ s.date | date:'HH:mm':timezone:locale }}
     </button>
   </div>
 
-  <ng-template #noSlots>
-    <p class="muted">Sem horários disponíveis neste dia.</p>
-  </ng-template>
+  <!-- 3) SEM SLOTS (apenas depois de carregar) -->
+  <p class="muted" *ngIf="!loading && slotItems.length === 0">
+    Sem horários disponíveis neste dia.
+  </p>
 </div>
+
