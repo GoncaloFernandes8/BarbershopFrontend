@@ -8,3 +8,76 @@
 @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
 .actions { margin-top: 1rem; }
 .welcome { margin-left: .5rem; }
+
+
+.section-title {
+  margin: 1rem 0 .5rem;
+  font-size: 1.1rem;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: .75rem;
+  margin-bottom: 1rem;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  background: #111;
+  cursor: pointer;
+  transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+  text-align: left;
+}
+
+.card:hover {
+  transform: translateY(-1px);
+}
+
+.card.selected {
+  border-color: #C3FF5A;
+  box-shadow: 0 0 0 4px rgba(195, 255, 90, 0.15);
+  background: #141914;
+}
+
+.card .thumb {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.card .avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: #222;
+}
+
+.card .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.card .card-title {
+  font-weight: 600;
+}
+
+.card .card-meta {
+  font-size: .85rem;
+  color: #aaa;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+/* dá espaço antes do footer só nesta página */
+.booking { padding-bottom: rem; }
+.booking .actions { margin: 1rem 0 3rem; }
+

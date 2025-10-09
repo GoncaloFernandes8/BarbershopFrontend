@@ -1,0 +1,9 @@
+.success { padding: 1rem 0 3rem; }
+.card {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: .5rem 1rem;
+  background: #111; border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px; padding: 1rem; margin-top: 1rem;
+}
+.actions { margin-top: 1rem; display: flex; gap: .75rem; }

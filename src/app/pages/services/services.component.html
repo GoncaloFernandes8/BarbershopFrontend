@@ -1,15 +1,33 @@
-<h1>Serviços</h1>
-<p class="muted">Transparência e preços honestos.</p>
-<div class="grid cols-3" style="margin-top:1rem">
-  <div class="card" *ngFor="let s of services">
-    <div style="display:flex; align-items:center; justify-content:space-between">
-      <h3 style="margin:.2rem 0">{{ s.name }}</h3>
-      <span class="price">{{ s.price }}€</span>
-    </div>
-    <p class="muted">{{ s.description }}</p>
-    <span class="badge">{{ s.durationMinutes }} min</span>
-    <div style="margin-top:1rem">
-      <a routerLink="/marcacao" class="btn">Marcar</a>
-    </div>
+<section class="services">
+  <h1>Serviços</h1>
+  <p class="muted">Transparência e preços honestos.</p>
+
+  <div class="services-grid">
+    <article class="service-card" *ngFor="let s of services(); trackBy: trackById">
+      <div class="media">
+        <img class="thumb" [src]="getServiceImg(s.name)" [alt]="s.name" loading="lazy" />
+        <span class="chip duration">{{ s.durationMin }} min</span>
+        <span *ngIf="s.name.toLowerCase().includes('corte e barba')" class="chip popular">Mais popular</span>
+      </div>
+
+      <div class="body">
+        <h3 class="title">{{ s.name }}</h3>
+        <p class="desc muted">{{ getDesc(s) }}</p>
+
+        <div class="meta">
+          <span class="price">
+            <strong>{{ euros(s.priceCents) | number:'1.2-2':'pt-PT' }}</strong> €
+          </span>
+          <span class="permin" *ngIf="s.durationMin">
+            {{ (euros(s.priceCents)/s.durationMin) | number:'1.2-2':'pt-PT' }} €/min
+          </span>
+        </div>
+
+        <div class="actions">
+          <!-- passa o id do serviço para pré-selecionar na página de marcação -->
+          <a class="btn accent" routerLink="/marcacao" [queryParams]="{ servico: s.id }">Marcar</a>
+        </div>
+      </div>
+    </article>
   </div>
-</div>
+</section>

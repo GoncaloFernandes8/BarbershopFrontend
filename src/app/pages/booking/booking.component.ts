@@ -1,6 +1,8 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { combineLatest, map } from 'rxjs';
 
 import { CalendarMonthComponent } from '../../components/calendar-month/calendar-month.component';
 import { TimeSlotsComponent } from '../../components/time-slots/time-slots.component';
@@ -20,6 +22,7 @@ export class BookingComponent implements OnInit {
   private api = inject(BookingService);
   private auth = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   // dropdowns
   services = signal<ServiceDto[]>([]);
@@ -39,20 +42,37 @@ export class BookingComponent implements OnInit {
   note = signal<string | null>(null);
 
   ngOnInit(): void {
-    this.api.getBarbers().subscribe(list => {
-      const active = list.filter(b => b.active);
-      this.barbers.set(active);
-      if (!this.selectedBarberId() && active.length) this.selectedBarberId.set(active[0].id);
-      this.loadAvailability();
-    });
+  const barbers$  = this.api.getBarbers().pipe(map(list => list.filter(b => b.active)));
+  const services$ = this.api.getServices().pipe(map(list => list.filter(s => s.active)));
 
-    this.api.getServices().subscribe(list => {
-      const active = list.filter(s => s.active);
-      this.services.set(active);
-      if (!this.selectedServiceId() && active.length) this.selectedServiceId.set(active[0].id);
-      this.loadAvailability();
-    });
-  }
+  combineLatest([barbers$, services$]).subscribe(([barbers, services]) => {
+    // guardar listas
+    this.barbers.set(barbers);
+    this.services.set(services);
+
+    // ler query params (?servico=&barbeiro=)
+    const qpm = this.route.snapshot.queryParamMap;
+    const qpService  = Number(qpm.get('servico'));
+    const qpBarber   = Number(qpm.get('barbeiro'));
+
+    // escolher IDs válidos (fallback para o primeiro ativo)
+    const svcId =
+      services.find(s => s.id === qpService)?.id ??
+      services[0]?.id ?? null;
+
+    const barbId =
+      barbers.find(b => b.id === qpBarber)?.id ??
+      barbers[0]?.id ?? null;
+
+    this.selectedServiceId.set(svcId);
+    this.selectedBarberId.set(barbId);
+
+    // carregar disponibilidade uma única vez
+    this.selectedSlot.set(null);
+    this.loadAvailability();
+  });
+}
+
 
   onMonthChange(ym: string) {
     this.month.set(ym);
@@ -94,15 +114,50 @@ export class BookingComponent implements OnInit {
       startsAt: this.selectedSlot()!,   // ISO vindo do /availability (pode vir com Z)
       notes: ''
     }).subscribe({
-      next: id => this.router.navigate(['/sucesso', id || 'ok']),
+      next: id => this.router.navigate(['/sucesso']),
       error: err => this.note.set(err?.status === 409
         ? 'Esse horário ficou indisponível. Escolhe outro, por favor.'
         : 'Não foi possível criar a marcação.')
     });
   }
+
+onPickService(id: number) {
+    if (this.selectedServiceId() === id) return;
+    this.selectedServiceId.set(id);
+    this.selectedSlot.set(null);
+    this.loadAvailability();
+  }
+
+  onPickBarber(id: number) {
+    if (this.selectedBarberId() === id) return;
+    this.selectedBarberId.set(id);
+    this.selectedSlot.set(null);
+    this.loadAvailability();
+  }
+
+  // === imagens ===
+  getServiceImg(s: ServiceDto): string {
+    // mapeia por nome (ajusta se preferires slugs/ids)
+    const name = s.name.toLowerCase();
+    if (name.includes('corte e barba')) return 'assets/services/corte-barba.png';
+    if (name.includes('barba'))          return 'assets/services/barba.png';
+    if (name.includes('crian'))          return 'assets/services/crianca.png';
+    if (name.includes('corte'))          return 'assets/services/corte.png';
+    return 'assets/services/servico.png'; // fallback
+  }
+
+  getBarberImg(b: BarberDto): string {
+    // tenta por id; se não existir, usa default
+    return `assets/barbers/${b.id}.png`;
+    // ou, se quiseres fallback robusto:
+    // return this.imageExists[`assets/barbers/${b.id}.jpg`] ? `assets/barbers/${b.id}.jpg` : 'assets/barbers/default.jpg';
+  }
+
+
 }
 
 function toYmd(d: Date) {
   const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
   return `${y}-${m}-${day}`;
 }
+

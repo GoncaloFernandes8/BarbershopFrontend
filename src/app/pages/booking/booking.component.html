@@ -1,27 +1,48 @@
 <section class="booking">
   <h1>Fazer marcação</h1>
-  <p class="muted">Escolhe o serviço, barbeiro e reserva rapidamente no calendário.</p>
+  <p class="muted">Escolhe o serviço, o barbeiro e reserva rapidamente no calendário.</p>
 
-  <div class="filters row">
-    <label class="field">
-      <span>Serviço</span>
-      <select [(ngModel)]="selectedServiceId" (ngModelChange)="loadAvailability()">
-        <option *ngFor="let s of services()" [ngValue]="s.id">
-          {{ s.name }} ({{ s.durationMin }} min)
-        </option>
-      </select>
-    </label>
-
-    <label class="field">
-      <span>Barbeiro</span>
-      <select [(ngModel)]="selectedBarberId" (ngModelChange)="loadAvailability()">
-        <option *ngFor="let b of barbers()" [ngValue]="b.id">
-          {{ b.name }}
-        </option>
-      </select>
-    </label>
+  <!-- SERVIÇOS -->
+  <h3 class="section-title">Escolhe o serviço</h3>
+  <div class="cards">
+    <button
+      type="button"
+      class="card service"
+      *ngFor="let s of services()"
+      [class.selected]="selectedServiceId() === s.id"
+      (click)="onPickService(s.id)"
+      [attr.aria-pressed]="selectedServiceId() === s.id ? 'true' : 'false'"
+    >
+      <img class="thumb" [src]="getServiceImg(s)" [alt]="s.name" />
+      <div class="card-body">
+        <div class="card-title">{{ s.name }}</div>
+        <div class="card-meta">
+          {{ s.durationMin }} min · {{ (s.priceCents/100) | number:'1.2-2':'pt-PT' }} €
+        </div>
+      </div>
+    </button>
   </div>
 
+  <!-- BARBEIROS -->
+  <h3 class="section-title">Escolhe o barbeiro</h3>
+  <div class="cards">
+    <button
+      type="button"
+      class="card barber"
+      *ngFor="let b of barbers()"
+      [class.selected]="selectedBarberId() === b.id"
+      (click)="onPickBarber(b.id)"
+      [attr.aria-pressed]="selectedBarberId() === b.id ? 'true' : 'false'"
+    >
+      <img class="avatar" [src]="getBarberImg(b)" [alt]="b.name" />
+      <div class="card-body">
+        <div class="card-title">{{ b.name }}</div>
+        <div class="card-meta">Barbeiro</div>
+      </div>
+    </button>
+  </div>
+
+  <!-- CALENDÁRIO + SLOTS -->
   <div class="grid-2">
     <app-calendar-month
       [month]="month()"
@@ -33,15 +54,15 @@
     </app-calendar-month>
 
     <app-time-slots
-  *ngIf="selectedDate() as ymd"
-  [date]="ymd"
-  [slots]="slots()"
-  [selected]="selectedSlot() || undefined"
-  [timezone]="'Europe/Lisbon'"
-  [locale]="'pt-PT'"
-  [loading]="loadingSlots()"
-  (select)="onPickSlot($event)">
-</app-time-slots>
+      *ngIf="selectedDate() as ymd"
+      [date]="ymd"
+      [slots]="slots()"
+      [selected]="selectedSlot() || undefined"
+      [timezone]="'Europe/Lisbon'"
+      [locale]="'pt-PT'"
+      [loading]="loadingSlots()"
+      (select)="onPickSlot($event)">
+    </app-time-slots>
   </div>
 
   <p class="error" *ngIf="note()">{{ note() }}</p>
