@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "barbearia-chatgpt": {
+    "barbershop-frontend": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/barbearia-chatgpt",
+            "outputPath": "dist/barbershop-frontend",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -39,8 +39,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "12kB",
+                  "maximumError": "20kB"
                 }
               ],
               "outputHashing": "all"
@@ -57,10 +57,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "barbearia-chatgpt:build:production"
+              "buildTarget": "barbershop-frontend:build:production"
             },
             "development": {
-              "buildTarget": "barbearia-chatgpt:build:development"
+              "buildTarget": "barbershop-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
