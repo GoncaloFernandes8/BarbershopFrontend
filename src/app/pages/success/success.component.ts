@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { BookingService, AppointmentDto, ServiceDto, BarberDto } from '../../services/booking.service';
-import { combineLatest, map, switchMap } from 'rxjs';
+import { BookingService, AppointmentDto } from '../../services/booking.service';
+import { of, combineLatest, map, switchMap, catchError } from 'rxjs';
 
 @Component({
   standalone: true,
   selector: 'app-success',
-  imports: [CommonModule],
+  imports: [CommonModule, DatePipe, RouterLink], // 👈 adiciona RouterLink
   templateUrl: './success.component.html',
   styleUrls: ['./success.component.css']
 })
@@ -16,13 +16,18 @@ export class SuccessComponent {
   private api = inject(BookingService);
 
   vm$ = this.route.paramMap.pipe(
-    map(p => Number(p.get('id'))),
-    switchMap(id => this.api.getAppointmentById(id)),
-    switchMap((appt: AppointmentDto) =>
-      combineLatest([
-        this.api.getServiceById(appt.serviceId),
-        this.api.getBarberById(appt.barberId)
-      ]).pipe(map(([service, barber]) => ({ appt, service, barber })))
-    )
+    map(p => p.get('id')),
+    switchMap(id => {
+      if (!id) return of({ appt: null, service: null, barber: null });
+      return this.api.getAppointmentById(id).pipe(
+        switchMap((appt: AppointmentDto) =>
+          combineLatest([
+            this.api.getServiceById(appt.serviceId),
+            this.api.getBarberById(appt.barberId)
+          ]).pipe(map(([service, barber]) => ({ appt, service, barber })))
+        ),
+        catchError(() => of({ appt: null, service: null, barber: null }))
+      );
+    })
   );
 }

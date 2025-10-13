@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, map } from 'rxjs';
+import { combineLatest, map, finalize} from 'rxjs';
 
 import { CalendarMonthComponent } from '../../components/calendar-month/calendar-month.component';
 import { TimeSlotsComponent } from '../../components/time-slots/time-slots.component';
@@ -23,7 +23,8 @@ export class BookingComponent implements OnInit {
   private auth = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-
+  submitting = signal(false);
+  notes = '';
   // dropdowns
   services = signal<ServiceDto[]>([]);
   barbers  = signal<BarberDto[]>([]);
@@ -103,23 +104,36 @@ export class BookingComponent implements OnInit {
   canSubmit = computed(() => !!this.selectedBarberId() && !!this.selectedServiceId() && !!this.selectedDate() && !!this.selectedSlot());
 
   book() {
-    if (!this.canSubmit()) return;
-    const u = this.auth.user;
-    if (!u?.id) { this.note.set('Tens de iniciar sessão para marcar.'); return; }
+  if (!this.canSubmit()) return;
+  const u = this.auth.user;
+  if (!u?.id) { this.note.set('Tens de iniciar sessão para marcar.'); return; }
 
-    this.api.createAppointment({
-      barberId: this.selectedBarberId()!,
-      serviceId: this.selectedServiceId()!,
-      clientId: Number(u.id),
-      startsAt: this.selectedSlot()!,   // ISO vindo do /availability (pode vir com Z)
-      notes: ''
-    }).subscribe({
-      next: id => this.router.navigate(['/sucesso']),
-      error: err => this.note.set(err?.status === 409
-        ? 'Esse horário ficou indisponível. Escolhe outro, por favor.'
-        : 'Não foi possível criar a marcação.')
-    });
-  }
+  this.submitting.set(true);
+  this.note.set(null);
+
+  this.api.createAppointment({
+    barberId: this.selectedBarberId()!,
+    serviceId: this.selectedServiceId()!,
+    clientId: Number(u.id),
+    startsAt: this.selectedSlot()!,
+    notes: this.notes.trim() || undefined
+  })
+  .pipe(finalize(() => this.submitting.set(false)))
+  .subscribe({
+    next: (id: string) => {
+      this.notes = '';
+      this.router.navigate(['/sucesso', id]);   // 👈 UUID
+    },
+    error: (err) => {
+      this.note.set(
+        err?.status === 409
+          ? 'Esse horário ficou indisponível. Escolhe outro, por favor.'
+          : (err?.message || 'Não foi possível criar a marcação.')
+      );
+      console.error('Falha ao criar marcação:', err);
+    }
+  });
+}
 
 onPickService(id: number) {
     if (this.selectedServiceId() === id) return;

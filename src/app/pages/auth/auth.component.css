@@ -80,3 +80,6 @@ input{
   height: 40px;
   display: block;
 }
+
+.resend { margin: .25rem 0 .5rem; display: flex; align-items: center; gap: .5rem; }
+.btn.small { padding:.55rem .8rem; border-radius:10px; font-size:.95rem; }

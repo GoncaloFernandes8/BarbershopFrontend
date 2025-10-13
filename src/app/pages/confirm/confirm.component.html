@@ -1,0 +1,12 @@
+<section class="card" style="padding:1.25rem">
+  <h1>Confirmar email</h1>
+  <p class="muted" *ngIf="loading()">A confirmar…</p>
+
+  <ng-container *ngIf="!loading()">
+    <p [class]="ok() ? 'success' : 'error'">{{ msg() }}</p>
+    <div class="actions" style="margin-top:1rem">
+      <a routerLink="/login" class="btn accent">Ir para o login</a>
+      <a routerLink="/" class="btn">Voltar ao início</a>
+    </div>
+  </ng-container>
+</section>

@@ -17,6 +17,10 @@ export class AuthComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
+  // já tens: import { Component, inject, signal } from '@angular/core';
+  pendingEmail = signal<string | null>(null);
+  resending = signal(false);
+
   activeTab = signal<'login'|'register'>('login');
   showPwdLogin = signal(false);
   showPwdReg = signal(false);
@@ -45,40 +49,55 @@ export class AuthComponent {
   switch(tab: 'login'|'register'){ this.activeTab.set(tab); this.note.set(null); }
 
   submitLogin(){
-    if (this.loginForm.invalid) { this.loginForm.markAllAsTouched(); return; }
-    this.loading.set(true);
+  if (this.loginForm.invalid) { this.loginForm.markAllAsTouched(); return; }
+  this.loading.set(true);
+  const { email, password } = this.loginForm.getRawValue();
+  this.auth.login({ email, password }).subscribe({
+    next: () => { this.loading.set(false); this.router.navigateByUrl('/marcacao'); },
+    error: (err) => {
+      this.loading.set(false);
+      this.note.set(err?.error?.message ?? 'Credenciais inválidas.');
+    }
+  });
+}
 
-    // <<< só envia email+password >>>
-    const { email, password } = this.loginForm.getRawValue();
-    this.auth.login({ email, password }).subscribe({
-      next: (res) => {
-        if (res.user.status === 'PENDING') this.note.set('Conta criada mas a aguardar aprovação do barbeiro.');
-        else this.router.navigateByUrl('/marcacao');
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.note.set(err?.error?.message || 'Credenciais inválidas.');
-        this.loading.set(false);
-      }
-    });
-  }
+
+resendVerification(){
+  const email = this.pendingEmail();
+  if (!email) return;
+
+  this.resending.set(true);
+  this.auth.resendVerification(email).subscribe({
+    next: () => {
+      this.resending.set(false);
+      this.note.set('Reenviámos o email de verificação. Verifica a tua caixa de entrada.');
+    },
+    error: () => {
+      this.resending.set(false);
+      this.note.set('Não foi possível reenviar agora. Tenta mais tarde.');
+    }
+  });
+}
+
+
 
   submitRegister(){
-    if (this.registerForm.invalid) { this.registerForm.markAllAsTouched(); return; }
-    this.loading.set(true);
-    this.auth.register(this.registerForm.getRawValue()).subscribe({
-      next: (res) => {
-        if (res.requiresEmailVerification) this.note.set('Verifica o teu email para confirmar a conta.');
-        else this.note.set('Registo submetido. Aguardando aprovação do barbeiro.');
-        this.activeTab.set('login');
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.note.set(err?.error?.message || 'Não foi possível registar.');
-        this.loading.set(false);
-      }
-    });
-  }
+  if (this.registerForm.invalid) { this.registerForm.markAllAsTouched(); return; }
+  this.loading.set(true);
+  this.auth.register(this.registerForm.getRawValue()).subscribe({
+    next: () => {
+      this.note.set('Enviámos um email de confirmação. Abre o link para concluir o registo.');
+      this.activeTab.set('login');
+      this.loading.set(false);
+    },
+    error: (err) => {
+      this.note.set(err?.error?.message || 'Não foi possível registar.');
+      this.loading.set(false);
+    }
+  });
+}
+
+  
 
   get lf(){ return this.loginForm.controls; }
   get rf(){ return this.registerForm.controls; }

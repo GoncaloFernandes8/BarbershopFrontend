@@ -1,8 +1,54 @@
 <section class="success" *ngIf="vm$ | async as vm">
-  <h1>Marcação confirmada 🎉</h1>
-  <p class="muted" *ngIf="!vm.appt">Recebeste um email com os detalhes.</p>
-  <div *ngIf="vm.appt; else generic" class="card"> ... </div>
+  <div class="hero">
+    <div class="icon">✔</div>
+    <div>
+      <h1>Marcação confirmada</h1>
+      <p class="muted">Enviámos um email com os detalhes. Vemo-nos em breve!</p>
+    </div>
+  </div>
+
+  <!-- Detalhes completos -->
+  <div *ngIf="vm.appt; else generic" class="card details">
+    <div class="row">
+      <span class="label">Quando</span>
+      <span class="value">
+        {{ vm.appt.startsAt | date:"EEEE, d 'de' MMMM 'às' HH:mm":'Europe/Lisbon':'pt-PT' }}
+      </span>
+    </div>
+
+    <div class="row">
+      <span class="label">Serviço</span>
+      <span class="value">
+        {{ vm.service.name }}
+        <span class="muted">({{ vm.service.durationMin }} min)</span>
+      </span>
+    </div>
+
+    <div class="row">
+      <span class="label">Barbeiro</span>
+      <span class="value">{{ vm.barber.name }}</span>
+    </div>
+
+    <div class="row">
+      <span class="label">Referência</span>
+      <span class="value">#{{ vm.appt.id }}</span>
+    </div>
+
+    <div class="row" *ngIf="vm.appt.notes">
+      <span class="label">Notas</span>
+      <span class="value">{{ vm.appt.notes }}</span>
+    </div>
+  </div>
+
+  <!-- Mensagem genérica (caso sem id/detalhes) -->
   <ng-template #generic>
-    <p>Recebeste um email com os detalhes da tua marcação.</p>
+    <div class="card">
+      <p class="muted">Recebeste um email com os detalhes da tua marcação.</p>
+    </div>
   </ng-template>
+
+  <div class="actions">
+    <a routerLink="/" class="btn">Voltar ao início</a>
+    <a routerLink="/marcacao" class="btn accent">Nova marcação</a>
+  </div>
 </section>

@@ -6,6 +6,19 @@
 
   <p class="muted small" *ngIf="note()">{{ note() }}</p>
 
+  <!-- Só aparece quando o backend respondeu EMAIL_NOT_VERIFIED -->
+<div *ngIf="pendingEmail()" class="resend">
+  <button type="button"
+          class="btn small"
+          (click)="resendVerification()"
+          [disabled]="resending()">
+    {{ resending() ? 'A reenviar…' : 'Reenviar email de verificação' }}
+  </button>
+  <span class="muted small" style="margin-left:.5rem">
+    para {{ pendingEmail() }}
+  </span>
+</div>
+
   <!-- LOGIN -->
   <form *ngIf="activeTab()==='login'"
         [formGroup]="loginForm"
