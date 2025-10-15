@@ -307,5 +307,12 @@ figcaption{ color:#a0a7b4; font-size:.95rem }
   .barber-feature::before, .barber-feature::after{ opacity:.18; filter: blur(28px); }
 }
 
-
+/* Mobile: força uma só linha e escala o tamanho */
+@media (max-width: 480px){
+  .hero h1{
+    white-space: nowrap;                 /* não quebra linha */
+    font-size: clamp(1.3rem, 7.6vw, 2.2rem); /* reduz conforme a largura do ecrã */
+    line-height: 1.05;                   /* mantém compacto */
+  }
+}
 
