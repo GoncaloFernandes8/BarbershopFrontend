@@ -1,27 +1,41 @@
 <header class="header">
   <nav class="container nav">
     <a class="brand" routerLink="/">
-      <img class="brand-logo animated" src="assets/logo-neon.gif" alt="Logo Barbearia" width="40" height="4" />
-      <span>Barbearia <span class="badge">Cabelo &amp; Barba</span></span>
+      <img class="brand-logo animated" src="assets/logo-neon.gif" alt="Logo Barbearia" width="40" height="40" />
+      <span>Barbearia</span>
     </a>
 
-    <div class="auth-actions">
-      <!-- mostra Login só na HOME e quando NÃO está autenticado -->
-      <a *ngIf="isHome && !isLoggedIn" routerLink="/login" class="btn accent small">Login</a>
+    <!-- Toggle sem JS -->
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Abrir menu" #navToggler>
+    <label for="nav-toggle" class="nav-burger" aria-controls="nav-menu" [attr.aria-expanded]="navToggler?.checked ? 'true' : 'false'">
+      <span></span><span></span><span></span>
+    </label>
 
-      <!-- depois de logar, mostra a saudação -->
-      <span *ngIf="isLoggedIn" class="welcome small">Olá {{ userName }}!</span>
-      <!-- (opcional) botão sair -->
-      <button *ngIf="isLoggedIn" class="btn ghost small" (click)="logout()">Sair</button>
-    </div>
+    <div id="nav-menu" class="nav-menu">
+      <div class="nav-links">
+        <a routerLink="/" [routerLinkActiveOptions]="{exact:true}"
+           routerLinkActive="active" (click)="closeMenu(navToggler)">Início</a>
 
-    <div>
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Início</a>
-      <a routerLink="/servicos" routerLinkActive="active">Serviços</a>
-      <a routerLink="/marcacao" class="btn accent" style="margin-left:1rem">Marcar</a>
+        <a routerLink="/servicos" routerLinkActive="active"
+           (click)="closeMenu(navToggler)">Serviços</a>
+
+        <a routerLink="/marcacao" routerLinkActive="active"
+           (click)="closeMenu(navToggler)">Marcação</a>
+      </div>
+
+      <div class="auth-actions">
+        <a *ngIf="isHome && !isLoggedIn" routerLink="/login"
+           (click)="closeMenu(navToggler)">Login</a>
+
+        <span *ngIf="isLoggedIn" class="welcome small">Olá {{ userName }}!</span>
+
+        <button *ngIf="isLoggedIn"
+                (click)="logout(); closeMenu(navToggler)">Sair</button>
+      </div>
     </div>
   </nav>
 </header>
+
 
 <main class="container">
   <router-outlet></router-outlet>
