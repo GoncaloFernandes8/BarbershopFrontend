@@ -1,5 +1,7 @@
 /* ===== Tema / Tokens ===== */
 :host {
+  display: block;
+  overflow-x: clip; 
   --accent: #C3FF5A;
   --accent-2: #7aa7ff;
   --ink: #e9eef7;
