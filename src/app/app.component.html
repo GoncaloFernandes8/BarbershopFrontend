@@ -24,14 +24,15 @@
       </div>
 
       <div class="auth-actions">
-        <a *ngIf="isHome && !isLoggedIn" routerLink="/login"
-           (click)="closeMenu(navToggler)">Login</a>
+  <a *ngIf="isHome && !isLoggedIn" routerLink="/login"
+     (click)="closeMenu(navToggler)">Login</a>
 
-        <span *ngIf="isLoggedIn" class="welcome small">Olá {{ userName }}!</span>
+  <!-- apenas o botão Sair quando autenticado -->
+  <button *ngIf="isLoggedIn"
+          class="btn logout"
+          (click)="logout(); closeMenu(navToggler)">Sair</button>
+</div>
 
-        <button *ngIf="isLoggedIn"
-                (click)="logout(); closeMenu(navToggler)">Sair</button>
-      </div>
     </div>
   </nav>
 </header>

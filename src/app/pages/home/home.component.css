@@ -216,8 +216,15 @@ section:first-of-type { margin-top: 0; }
 /* CTAs */
 .btn.ghost{ background: transparent; border:1px solid #2a3042; }
 .btn.ghost:hover{ border-color: color-mix(in oklab, var(--accent) 40%, #2a3042); }
-.bf-copy .ctas { margin-top: var(--space-s); }
+
+.bf-copy .ctas { margin-top: var(--space-s); gap :.8rem}
 .bf-copy .ctas .btn { margin-top: var(--space-xs); }
+
+/* dá espaço APENAS entre os 2 botões, na horizontal */
+.bf-copy .ctas .btn + .btn{
+  margin-left: .8rem;   /* ajusta ao teu gosto */
+}
+
 
 /* ===== Testimonials ===== */
 .testimonials { margin-top: var(--space-xl); }
