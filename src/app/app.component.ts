@@ -16,6 +16,8 @@ export class AppComponent implements OnInit { // NEW: implements OnInit
   private el = inject(ElementRef<HTMLElement>); // NEW
   protected auth = inject(AuthService);
 
+  isAuthPage = false;
+
   // já tinhas:
   get isLoggedIn(): boolean {
     return !!this.auth.user;
@@ -35,15 +37,19 @@ export class AppComponent implements OnInit { // NEW: implements OnInit
     if (toggler) toggler.checked = false;
   }
 
-  // NEW: fecha o menu sempre que a navegação termina
   ngOnInit(): void {
-    this.router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe(() => {
-        const toggler = this.el.nativeElement.querySelector('#nav-toggle') as HTMLInputElement | null;
-        if (toggler) toggler.checked = false;
-      });
-  }
+  this.router.events
+    .pipe(filter(e => e instanceof NavigationEnd))
+    .subscribe(() => {
+      // fechar menu
+      const toggler = this.el.nativeElement.querySelector('#nav-toggle') as HTMLInputElement | null;
+      if (toggler) toggler.checked = false;
+
+      // 👇 NEW: marcar se estamos em /login ou /registar
+      const url = this.router.url;
+      this.isAuthPage = url.startsWith('/login') || url.startsWith('/registar');
+    });
+}
 
   logout() {
     this.auth.logout();

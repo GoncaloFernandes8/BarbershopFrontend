@@ -24,8 +24,9 @@
       </div>
 
       <div class="auth-actions">
-  <a *ngIf="isHome && !isLoggedIn" routerLink="/login"
-     (click)="closeMenu(navToggler)">Login</a>
+  <!-- antes: *ngIf="isHome && !isLoggedIn" -->
+<a *ngIf="!isLoggedIn && !isAuthPage" routerLink="/login" class="btn accent small">Login</a>
+
 
   <!-- apenas o botão Sair quando autenticado -->
   <button *ngIf="isLoggedIn"
