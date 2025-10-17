@@ -3,7 +3,13 @@
   <p class="muted" *ngIf="loading()">A confirmar…</p>
 
   <ng-container *ngIf="!loading()">
-    <p [class]="ok() ? 'success' : 'error'">{{ msg() }}</p>
+    <div class="status-container">
+      <div class="status-icon" [class]="ok() ? 'success' : 'error'">
+        <span *ngIf="ok()">✓</span>
+        <span *ngIf="!ok()">✗</span>
+      </div>
+      <p [class]="ok() ? 'success' : 'error'">{{ msg() }}</p>
+    </div>
     <div class="actions" style="margin-top:1rem">
       <a routerLink="/login" class="btn accent">Ir para o login</a>
       <a routerLink="/" class="btn">Voltar ao início</a>

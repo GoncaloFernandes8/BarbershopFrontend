@@ -115,44 +115,56 @@ export class ErrorHandlerService {
     Object.assign(notification.style, {
       position: 'fixed',
       top: '20px',
-      right: '20px',
-      padding: '12px 16px',
-      borderRadius: '8px',
-      color: 'white',
-      fontWeight: '500',
+      left: '50%',
+      transform: 'translateX(-50%) translateY(-100%)',
+      padding: '16px 24px',
+      borderRadius: '12px',
+      fontWeight: '600',
+      fontSize: '14px',
       zIndex: '9999',
-      maxWidth: '400px',
+      maxWidth: '500px',
+      width: '90%',
       wordWrap: 'break-word',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-      transform: 'translateX(100%)',
-      transition: 'transform 0.3s ease'
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+      transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+      textAlign: 'center',
+      border: '2px solid transparent'
     });
 
     // Cores baseadas no tipo
     const colors = {
       error: '#ef4444',
-      success: '#10b981',
+      success: '#C3FF5A',
       warning: '#f59e0b',
       info: '#3b82f6'
     };
+    
+    const textColors = {
+      error: 'white',
+      success: '#0f0f11',
+      warning: 'white',
+      info: 'white'
+    };
+    
     notification.style.backgroundColor = colors[type];
+    notification.style.color = textColors[type];
 
     // Adicionar ao DOM
     document.body.appendChild(notification);
 
     // Animar entrada
     setTimeout(() => {
-      notification.style.transform = 'translateX(0)';
+      notification.style.transform = 'translateX(-50%) translateY(0)';
     }, 100);
 
     // Remover após 5 segundos
     setTimeout(() => {
-      notification.style.transform = 'translateX(100%)';
+      notification.style.transform = 'translateX(-50%) translateY(-100%)';
       setTimeout(() => {
         if (notification.parentNode) {
           notification.parentNode.removeChild(notification);
         }
-      }, 300);
+      }, 400);
     }, 5000);
   }
 
