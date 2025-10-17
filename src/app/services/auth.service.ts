@@ -34,14 +34,24 @@ export class AuthService {
         localStorage.setItem('auth_token', res.token);
         localStorage.setItem('refresh_token', res.refreshToken);
         localStorage.setItem('auth_user', JSON.stringify(res.user));
+        this.errorHandler.showSuccess('Login realizado com sucesso!');
       }),
-      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+      catchError((error: HttpErrorResponse) => {
+        this.errorHandler.showError('Erro ao fazer login. Verifique suas credenciais.');
+        return this.errorHandler.handleError(error);
+      })
     );
   }
 
   register(data: RegisterPayload): Observable<RegisterApiResponse> {
     return this.http.post<RegisterApiResponse>(`${this.API}/auth/register`, data).pipe(
-      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+      tap(() => {
+        this.errorHandler.showSuccess('Conta criada com sucesso! Verifique seu email.');
+      }),
+      catchError((error: HttpErrorResponse) => {
+        this.errorHandler.showError('Erro ao criar conta. Tente novamente.');
+        return this.errorHandler.handleError(error);
+      })
     );
   }
 
@@ -85,6 +95,7 @@ export class AuthService {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('auth_user');
+    this.errorHandler.showInfo('Sessão encerrada com sucesso.');
   }
 
   get user(): AuthUser | null {

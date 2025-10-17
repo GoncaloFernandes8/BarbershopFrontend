@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { map, Observable, catchError } from 'rxjs';
+import { map, Observable, catchError, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ErrorHandlerService } from './error-handler.service';
+import { CacheService } from './cache.service';
 
 
 
@@ -34,7 +35,13 @@ export type BarberDto = {
 export class BookingService {
   private http = inject(HttpClient);
   private errorHandler = inject(ErrorHandlerService);
+  private cache = inject(CacheService);
   private API = environment.apiUrl;
+
+  // Cache keys
+  private readonly SERVICES_CACHE_KEY = 'services';
+  private readonly BARBERS_CACHE_KEY = 'barbers';
+  private readonly CACHE_TTL = 10 * 60 * 1000; // 10 minutos
 
   // 👇 NOVO: buscar appointment por id
   getAppointmentById(id: string): Observable<AppointmentDto> {
@@ -51,8 +58,12 @@ export class BookingService {
   }
 
   getServices(): Observable<ServiceDto[]> {
-    return this.http.get<ServiceDto[]>(`${this.API}/services`).pipe(
-      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    return this.cache.getOrSet(
+      this.SERVICES_CACHE_KEY,
+      () => this.http.get<ServiceDto[]>(`${this.API}/services`).pipe(
+        catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+      ),
+      this.CACHE_TTL
     );
   }
 
@@ -64,8 +75,12 @@ export class BookingService {
   }
   
   getBarbers(): Observable<BarberDto[]> {
-    return this.http.get<BarberDto[]>(`${this.API}/barbers`).pipe(
-      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    return this.cache.getOrSet(
+      this.BARBERS_CACHE_KEY,
+      () => this.http.get<BarberDto[]>(`${this.API}/barbers`).pipe(
+        catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+      ),
+      this.CACHE_TTL
     );
   }
   
@@ -82,7 +97,10 @@ export class BookingService {
         map(res => {
           // 1) id no corpo (UUID)
           const bodyId = res.body?.id;
-          if (typeof bodyId === 'string' && bodyId.length) return bodyId;
+          if (typeof bodyId === 'string' && bodyId.length) {
+            this.errorHandler.showSuccess('Marcação realizada com sucesso!');
+            return bodyId;
+          }
 
           // 2) tentar no Location
           const loc = res.headers.get('Location') || res.headers.get('location');
@@ -90,15 +108,48 @@ export class BookingService {
             try {
               const url = new URL(loc, this.API);
               const last = url.pathname.split('/').filter(Boolean).pop();
-              if (last) return last; // pode ser UUID
+              if (last) {
+                this.errorHandler.showSuccess('Marcação realizada com sucesso!');
+                return last; // pode ser UUID
+              }
             } catch {}
             const m = loc.match(/\/([^\/\?]+)(?:\?.*)?$/);
-            if (m) return m[1];
+            if (m) {
+              this.errorHandler.showSuccess('Marcação realizada com sucesso!');
+              return m[1];
+            }
           }
 
           throw new Error('O servidor não devolveu o ID da marcação.');
         }),
-        catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+        catchError((error: HttpErrorResponse) => {
+          this.errorHandler.showError('Erro ao criar marcação. Tente novamente.');
+          return this.errorHandler.handleError(error);
+        })
       );
+  }
+
+  // Métodos para gerenciar cache
+  invalidateServicesCache(): void {
+    this.cache.delete(this.SERVICES_CACHE_KEY);
+  }
+
+  invalidateBarbersCache(): void {
+    this.cache.delete(this.BARBERS_CACHE_KEY);
+  }
+
+  invalidateAllCache(): void {
+    this.cache.clear();
+  }
+
+  // Método para forçar refresh dos dados
+  refreshServices(): Observable<ServiceDto[]> {
+    this.invalidateServicesCache();
+    return this.getServices();
+  }
+
+  refreshBarbers(): Observable<BarberDto[]> {
+    this.invalidateBarbersCache();
+    return this.getBarbers();
   }
 }

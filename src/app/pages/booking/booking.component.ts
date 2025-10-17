@@ -23,13 +23,21 @@ export class BookingComponent implements OnInit {
   private auth = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  
+  // Loading states
   submitting = signal(false);
+  loadingServices = signal(true);
+  loadingBarbers = signal(true);
+  loadingSlots = signal(false);
+  
+  // Form data
   notes = '';
-  // dropdowns
+  
+  // Data
   services = signal<ServiceDto[]>([]);
-  barbers  = signal<BarberDto[]>([]);
+  barbers = signal<BarberDto[]>([]);
   selectedServiceId = signal<number | null>(null);
-  selectedBarberId  = signal<number | null>(null);
+  selectedBarberId = signal<number | null>(null);
 
   // calendário
   todayYmd = toYmd(new Date());
@@ -39,15 +47,22 @@ export class BookingComponent implements OnInit {
   // slots
   slots = signal<string[]>([]);
   selectedSlot = signal<string | null>(null);
-  loadingSlots = signal<boolean>(false);
   note = signal<string | null>(null);
 
   ngOnInit(): void {
-  const barbers$  = this.api.getBarbers().pipe(map(list => list.filter(b => b.active)));
-  const services$ = this.api.getServices().pipe(map(list => list.filter(s => s.active)));
+    // Carregar dados com estados de loading
+    const barbers$ = this.api.getBarbers().pipe(
+      map(list => list.filter(b => b.active)),
+      finalize(() => this.loadingBarbers.set(false))
+    );
+    
+    const services$ = this.api.getServices().pipe(
+      map(list => list.filter(s => s.active)),
+      finalize(() => this.loadingServices.set(false))
+    );
 
-  combineLatest([barbers$, services$]).subscribe(([barbers, services]) => {
-    // guardar listas
+    combineLatest([barbers$, services$]).subscribe(([barbers, services]) => {
+      // guardar listas
     this.barbers.set(barbers);
     this.services.set(services);
 
