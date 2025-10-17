@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap, map } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, tap, map, catchError } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { ErrorHandlerService } from './error-handler.service';
 
 export type VerifyEmailResponse = { verified: boolean; message?: string };
 export type RegisterApiResponse = { sent: boolean };
@@ -15,41 +17,73 @@ export type AuthUser = {
   status?: 'APPROVED' | 'PENDING';
 };
 
-export type LoginResponse = { token: string; user: AuthUser };
+export type LoginResponse = { token: string; refreshToken: string; user: AuthUser };
 export type RegisterResponse = { user: AuthUser; requiresEmailVerification?: boolean };
+export type RefreshResponse = { token: string; refreshToken: string; user: AuthUser };
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
-  private API = 'https://due-constancia-goncalo-6b7726ec.koyeb.app';
+  private errorHandler = inject(ErrorHandlerService);
+  private API = environment.apiUrl;
 
   // LOGIN normal (mantém)
   login(data: LoginPayload): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.API}/auth/login`, data).pipe(
       tap(res => {
         localStorage.setItem('auth_token', res.token);
+        localStorage.setItem('refresh_token', res.refreshToken);
         localStorage.setItem('auth_user', JSON.stringify(res.user));
+      }),
+      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
+  }
+
+  register(data: RegisterPayload): Observable<RegisterApiResponse> {
+    return this.http.post<RegisterApiResponse>(`${this.API}/auth/register`, data).pipe(
+      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
+  }
+
+  verifyEmail(token: string): Observable<{ verified: boolean; userId?: number; message?: string }> {
+    return this.http.post<{ verified: boolean; userId?: number; message?: string }>(
+      `${this.API}/auth/verify`, { token }
+    ).pipe(
+      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
+  }
+
+  // REENVIAR EMAIL DE VERIFICAÇÃO (botão no login/registo)
+  resendVerification(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.API}/auth/verify/resend`, { email }).pipe(
+      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
+  }
+
+  // REFRESH TOKEN
+  refreshToken(): Observable<RefreshResponse> {
+    const refreshToken = localStorage.getItem('refresh_token');
+    if (!refreshToken) {
+      throw new Error('No refresh token available');
+    }
+    
+    return this.http.post<RefreshResponse>(`${this.API}/auth/refresh`, { refreshToken }).pipe(
+      tap(res => {
+        localStorage.setItem('auth_token', res.token);
+        localStorage.setItem('refresh_token', res.refreshToken);
+        localStorage.setItem('auth_user', JSON.stringify(res.user));
+      }),
+      catchError((error: HttpErrorResponse) => {
+        // Se o refresh falhar, limpar tokens e redirecionar para login
+        this.logout();
+        return this.errorHandler.handleError(error);
       })
     );
   }
 
-  register(data: RegisterPayload) {
-  return this.http.post<RegisterApiResponse>(`${this.API}/auth/register`, data);
-}
-
-  verifyEmail(token: string) {
-  return this.http.post<{ verified: boolean; userId?: number; message?: string }>(
-    `${this.API}/auth/verify`, { token }
-  );
-}
-
-  // REENVIAR EMAIL DE VERIFICAÇÃO (botão no login/registo)
-  resendVerification(email: string) {
-    return this.http.post<void>(`${this.API}/auth/verify/resend`, { email });
-  }
-
   logout() {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('refresh_token');
     localStorage.removeItem('auth_user');
   }
 

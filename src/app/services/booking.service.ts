@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { map, Observable, catchError } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { ErrorHandlerService } from './error-handler.service';
 
 
 
@@ -31,34 +33,46 @@ export type BarberDto = {
 @Injectable({ providedIn: 'root' })
 export class BookingService {
   private http = inject(HttpClient);
-  private API = 'https://due-constancia-goncalo-6b7726ec.koyeb.app';
+  private errorHandler = inject(ErrorHandlerService);
+  private API = environment.apiUrl;
 
   // 👇 NOVO: buscar appointment por id
-  getAppointmentById(id: string) {
-    return this.http.get<AppointmentDto>(`${this.API}/appointments/${id}`);
+  getAppointmentById(id: string): Observable<AppointmentDto> {
+    return this.http.get<AppointmentDto>(`${this.API}/appointments/${id}`).pipe(
+      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
   }
 
   // 👇 (existe no teu backend) obter serviço por id
-  getServiceById(id: number) {
-    return this.http.get<ServiceDto>(`${this.API}/services/${id}`);
+  getServiceById(id: number): Observable<ServiceDto> {
+    return this.http.get<ServiceDto>(`${this.API}/services/${id}`).pipe(
+      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
   }
 
   getServices(): Observable<ServiceDto[]> {
-    return this.http.get<ServiceDto[]>(`${this.API}/services`);
+    return this.http.get<ServiceDto[]>(`${this.API}/services`).pipe(
+      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
   }
 
   // 👇 não sei se tens GET /barbers/{id}; seguro: carrega todos e encontra localmente
-  getBarberById(id: number) {
+  getBarberById(id: number): Observable<BarberDto> {
     return this.getBarbers().pipe(
       map(list => list.find(b => b.id === id)!)
     );
   }
   
   getBarbers(): Observable<BarberDto[]> {
-    return this.http.get<BarberDto[]>(`${this.API}/barbers`);
+    return this.http.get<BarberDto[]>(`${this.API}/barbers`).pipe(
+      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
   }
+  
   getAvailability(barberId: number, serviceId: number, ymd: string): Observable<string[]> {
-    return this.http.get<string[]>(`${this.API}/availability`, { params: { barberId, serviceId, date: ymd } });
+    return this.http.get<string[]>(`${this.API}/availability`, { params: { barberId, serviceId, date: ymd } }).pipe(
+      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
   }
  createAppointment(payload: {
     barberId: number; serviceId: number; clientId: number; startsAt: string; notes?: string;
@@ -83,7 +97,8 @@ export class BookingService {
           }
 
           throw new Error('O servidor não devolveu o ID da marcação.');
-        })
+        }),
+        catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
       );
   }
 }

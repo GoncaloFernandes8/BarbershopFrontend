@@ -1,12 +1,11 @@
 export interface Booking {
   id: string;
-  name: string;
-  phone: string;
-  email?: string;
-  serviceId: string;
-  serviceName: string;
-  price: number;
-  date: string; // YYYY-MM-DD
-  time: string; // HH:mm
-  createdAt: string; // ISO
+  barberId: number;
+  serviceId: number;
+  clientId: number;
+  startsAt: string; // ISO datetime
+  endsAt?: string; // ISO datetime
+  status?: string;
+  notes?: string | null;
+  createdAt?: string; // ISO
 }

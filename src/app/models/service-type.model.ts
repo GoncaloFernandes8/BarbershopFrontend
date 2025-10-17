@@ -1,14 +1,16 @@
 export interface ServiceType {
-  id: string;
+  id: number;
   name: string;
-  durationMinutes: number;
-  price: number;
-  description?: string;
+  durationMin: number;
+  bufferAfterMin: number;
+  priceCents: number;
+  active: boolean;
 }
 
-export const SERVICE_TYPES: ServiceType[] = [
-  { id: 'corte', name: 'Corte de Cabelo', durationMinutes: 30, price: 12, description: 'Clássico, fade ou à máquina.' },
-  { id: 'barba', name: 'Barba', durationMinutes: 30, price: 8, description: 'Acerto e contornos.' },
-  { id: 'corte-barba', name: 'Corte + Barba', durationMinutes: 60, price: 18, description: 'Pacote completo.' },
-  { id: 'crianca', name: 'Corte Criança', durationMinutes: 30, price: 10, description: 'Até 12 anos.' },
+// Mantém os tipos estáticos para fallback/desenvolvimento
+export const SERVICE_TYPES_STATIC: ServiceType[] = [
+  { id: 1, name: 'Corte de Cabelo', durationMin: 30, bufferAfterMin: 0, priceCents: 1200, active: true },
+  { id: 2, name: 'Barba', durationMin: 30, bufferAfterMin: 0, priceCents: 800, active: true },
+  { id: 3, name: 'Corte + Barba', durationMin: 60, bufferAfterMin: 0, priceCents: 1800, active: true },
+  { id: 4, name: 'Corte Criança', durationMin: 30, bufferAfterMin: 0, priceCents: 1000, active: true },
 ];
