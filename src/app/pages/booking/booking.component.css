@@ -25,13 +25,13 @@
 .card {
   display: flex;
   align-items: center;
-  gap: .75rem;
-  padding: .75rem;
+  gap: var(--space-3);
+  padding: var(--space-3);
   border: 2px solid transparent;
-  border-radius: 16px;
-  background: #111;
+  border-radius: var(--radius-2xl);
+  background: var(--color-surface);
   cursor: pointer;
-  transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
   text-align: left;
 }
 
@@ -40,9 +40,9 @@
 }
 
 .card.selected {
-  border-color: #C3FF5A;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 4px rgba(195, 255, 90, 0.15);
-  background: #141914;
+  background: var(--color-surface-hover);
 }
 
 .card .thumb {
@@ -105,12 +105,13 @@
 
 /* versão accent com glow */
 .btn.accent.cta{
-  background: var(--accent);
-  color: #111;
-  border: 0;
+  background: var(--color-primary);
+  color: var(--color-background);
+  border: 1px solid var(--color-primary);
   box-shadow: 0 10px 24px rgba(195,255,90,.25);
 }
 .btn.accent.cta:hover{
+  background: var(--color-primary-hover);
   transform: translateY(-1px);
   box-shadow: 0 14px 32px rgba(195,255,90,.3);
 }
