@@ -1,0 +1,108 @@
+<section class="history">
+  <div class="header">
+    <h1>Histórico de Marcações</h1>
+    <p class="muted">Todas as suas marcações anteriores</p>
+    
+    <div class="actions">
+      <button class="btn ghost" (click)="refresh()" [disabled]="loading()">
+        <span *ngIf="!loading()">🔄 Atualizar</span>
+        <span *ngIf="loading()">⏳ A carregar...</span>
+      </button>
+      <button class="btn accent" (click)="newAppointment()">
+        ➕ Nova Marcação
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="loading-container">
+    <div class="spinner"></div>
+    <p>A carregar histórico...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading() && appointments().length === 0" class="empty-state">
+    <div class="empty-icon">📅</div>
+    <h3>Ainda não tem marcações</h3>
+    <p class="muted">Faça a sua primeira marcação para ver o histórico aqui.</p>
+    <button class="btn accent" (click)="newAppointment()">
+      Fazer Primeira Marcação
+    </button>
+  </div>
+
+  <!-- Appointments List -->
+  <div *ngIf="!loading() && appointments().length > 0" class="appointments-list">
+    <div *ngFor="let appointment of appointments(); trackBy: trackByAppointmentId" class="appointment-card">
+      <div class="appointment-header">
+        <div class="appointment-date">
+          <div class="date-main">{{ formatDateTime(appointment.startsAt) }}</div>
+          <div class="appointment-id">#{{ appointment.id.slice(0, 8) }}</div>
+        </div>
+        <div class="appointment-status">
+          <span class="status-badge" [class]="getStatusClass(appointment.status)">
+            {{ getStatusText(appointment.status) }}
+          </span>
+        </div>
+      </div>
+
+      <div class="appointment-details">
+        <div class="detail-row">
+          <span class="detail-label">Serviço:</span>
+          <span class="detail-value">
+            {{ getServiceById(appointment.serviceId)?.name || 'Serviço não encontrado' }}
+            <span class="detail-price" *ngIf="getServiceById(appointment.serviceId)">
+              · {{ formatPrice(getServiceById(appointment.serviceId)!.priceCents) }}
+            </span>
+          </span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Barbeiro:</span>
+          <span class="detail-value">
+            {{ getBarberById(appointment.barberId)?.name || 'Barbeiro não encontrado' }}
+          </span>
+        </div>
+
+        <div class="detail-row" *ngIf="getServiceById(appointment.serviceId)">
+          <span class="detail-label">Duração:</span>
+          <span class="detail-value">{{ getServiceById(appointment.serviceId)!.durationMin }} minutos</span>
+        </div>
+
+        <div class="detail-row" *ngIf="appointment.notes">
+          <span class="detail-label">Notas:</span>
+          <span class="detail-value">{{ appointment.notes }}</span>
+        </div>
+      </div>
+
+      <div class="appointment-actions" *ngIf="appointment.status === 'CONFIRMED'">
+        <button class="btn small ghost">
+          📝 Editar
+        </button>
+        <button class="btn small error">
+          ❌ Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div *ngIf="!loading() && appointments().length > 0" class="summary">
+    <div class="summary-card">
+      <h3>Resumo</h3>
+      <div class="summary-stats">
+        <div class="stat">
+          <span class="stat-number">{{ totalAppointments }}</span>
+          <span class="stat-label">Total de Marcações</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">{{ completedAppointments }}</span>
+          <span class="stat-label">Concluídas</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">{{ confirmedAppointments }}</span>
+          <span class="stat-label">Próximas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

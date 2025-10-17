@@ -152,4 +152,11 @@ export class BookingService {
     this.invalidateBarbersCache();
     return this.getBarbers();
   }
+
+  // Buscar histórico de marcações do usuário logado
+  getUserAppointments(): Observable<AppointmentDto[]> {
+    return this.http.get<AppointmentDto[]>(`${this.API}/appointments/my`).pipe(
+      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
+  }
 }

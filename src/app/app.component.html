@@ -21,6 +21,9 @@
 
         <a routerLink="/marcacao" routerLinkActive="active"
            (click)="closeMenu(navToggler)">Marcação</a>
+
+        <a *ngIf="isLoggedIn" routerLink="/historico" routerLinkActive="active"
+           (click)="closeMenu(navToggler)">Histórico</a>
       </div>
 
       <div class="auth-actions">
