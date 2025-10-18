@@ -10,36 +10,36 @@
     <label for="nav-toggle" class="nav-burger" aria-controls="nav-menu" [attr.aria-expanded]="navToggler?.checked ? 'true' : 'false'">
       <span></span><span></span><span></span>
     </label>
+  </nav>
+</header>
 
-    <div id="nav-menu" class="nav-menu">
-      <div class="nav-links">
-        <a routerLink="/" [routerLinkActiveOptions]="{exact:true}"
-           routerLinkActive="active" (click)="closeMenu(navToggler)">Início</a>
+<!-- Menu fora do header para evitar problemas de z-index -->
+<div id="nav-menu" class="nav-menu">
+  <div class="nav-links">
+    <a routerLink="/" [routerLinkActiveOptions]="{exact:true}"
+       routerLinkActive="active" (click)="closeMenu(navToggler)">Início</a>
 
-        <a routerLink="/servicos" routerLinkActive="active"
-           (click)="closeMenu(navToggler)">Serviços</a>
+    <a routerLink="/servicos" routerLinkActive="active"
+       (click)="closeMenu(navToggler)">Serviços</a>
 
-        <a routerLink="/marcacao" routerLinkActive="active"
-           (click)="closeMenu(navToggler)">Marcação</a>
+    <a routerLink="/marcacao" routerLinkActive="active"
+       (click)="closeMenu(navToggler)">Marcação</a>
 
-        <a *ngIf="isLoggedIn" routerLink="/historico" routerLinkActive="active"
-           (click)="closeMenu(navToggler)">Histórico</a>
-      </div>
+    <a *ngIf="isLoggedIn" routerLink="/historico" routerLinkActive="active"
+       (click)="closeMenu(navToggler)">Histórico</a>
+  </div>
 
-      <div class="auth-actions">
-  <!-- antes: *ngIf="isHome && !isLoggedIn" -->
+  <div class="auth-actions">
+<!-- antes: *ngIf="isHome && !isLoggedIn" -->
 <a *ngIf="!isLoggedIn && !isAuthPage" routerLink="/login" class="btn accent small">Login</a>
 
 
-  <!-- apenas o botão Sair quando autenticado -->
-  <button *ngIf="isLoggedIn"
-          class="btn logout"
-          (click)="logout(); closeMenu(navToggler)">Sair</button>
+<!-- apenas o botão Sair quando autenticado -->
+<button *ngIf="isLoggedIn"
+        class="btn logout"
+        (click)="logout(); closeMenu(navToggler)">Sair</button>
 </div>
-
-    </div>
-  </nav>
-</header>
+</div>
 
 
 <main class="container">
