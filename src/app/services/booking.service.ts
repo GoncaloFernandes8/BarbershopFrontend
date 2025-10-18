@@ -155,7 +155,11 @@ export class BookingService {
 
   // Buscar histórico de marcações do usuário logado
   getUserAppointments(): Observable<AppointmentDto[]> {
-    return this.http.get<AppointmentDto[]>(`${this.API}/appointments/my`).pipe(
+    return this.http.get<AppointmentDto[]>(`${this.API}/appointments/my`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    }).pipe(
       catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
     );
   }
