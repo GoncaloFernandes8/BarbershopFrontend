@@ -1,59 +1,82 @@
-# Barbershop
+# 🪒 Barbershop Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.16.
+Frontend da aplicação de agendamento de barbearia desenvolvido em Angular.
 
-## Development server
+## 📋 Funcionalidades
 
-To start a local development server, run:
+- **Página Inicial**: Apresentação da barbearia com informações sobre serviços
+- **Catálogo de Serviços**: Visualização dos serviços disponíveis (corte, barba, etc.)
+- **Sistema de Agendamento**: 
+  - Seleção de data e horário
+  - Escolha do barbeiro
+  - Seleção do serviço desejado
+- **Histórico de Marcações**: Visualização de agendamentos anteriores
+- **Autenticação**: Login e logout de usuários
+- **Design Responsivo**: Interface adaptável para mobile e desktop
 
+## 🛠️ Tecnologias
+
+- **Angular 18+** - Framework principal
+- **TypeScript** - Linguagem de programação
+- **CSS3** - Estilização com design tokens
+- **RxJS** - Programação reativa
+- **Angular Router** - Navegação entre páginas
+
+## 🚀 Como Executar
+
+### Pré-requisitos
+- Node.js 18+ 
+- npm ou yarn
+
+### Instalação
 ```bash
+# Instalar dependências
+npm install
+
+# Executar em modo desenvolvimento
 ng serve
+
+# Acessar em http://localhost:4200
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+### Build para Produção
 ```bash
-ng generate component component-name
+ng build --configuration production
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 📱 Páginas
 
-```bash
-ng generate --help
+- **/** - Página inicial
+- **/servicos** - Catálogo de serviços
+- **/marcacao** - Sistema de agendamento
+- **/historico** - Histórico de marcações (requer login)
+- **/login** - Autenticação
+
+## 🎨 Design
+
+- **Tema escuro** com acentos em verde neon
+- **Interface moderna** com gradientes e blur effects
+- **Menu hambúrguer** responsivo
+- **Componentes reutilizáveis** com design tokens
+
+## 📦 Estrutura do Projeto
+
+```
+src/
+├── app/
+│   ├── components/     # Componentes reutilizáveis
+│   ├── pages/         # Páginas da aplicação
+│   ├── services/      # Serviços (auth, booking, etc.)
+│   ├── models/        # Interfaces TypeScript
+│   └── guards/        # Guards de rota
+├── assets/           # Imagens e recursos
+└── styles/           # Estilos globais e tokens
 ```
 
-## Building
+## 🔧 Configuração
 
-To build the project run:
+O projeto está configurado para se conectar com a API backend. Certifique-se de que o backend esteja rodando na porta configurada.
 
-```bash
-ng build
-```
+## 📄 Licença
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Projeto desenvolvido para fins educacionais e comerciais.
