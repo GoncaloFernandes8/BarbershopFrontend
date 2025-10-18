@@ -1,16 +1,20 @@
 <section class="history">
   <div class="header">
-    <h1>Histórico de Marcações</h1>
-    <p class="muted">Todas as suas marcações anteriores</p>
-    
-    <div class="actions">
-      <button class="btn ghost" (click)="refresh()" [disabled]="loading()">
-        <span *ngIf="!loading()">🔄 Atualizar</span>
-        <span *ngIf="loading()">⏳ A carregar...</span>
-      </button>
-      <button class="btn accent" (click)="newAppointment()">
-        ➕ Nova Marcação
-      </button>
+    <div class="header-content">
+      <div class="header-text">
+        <h1>Histórico de Marcações</h1>
+        <p class="muted">Todas as suas marcações anteriores</p>
+      </div>
+      
+      <div class="actions">
+        <button class="btn ghost" (click)="refresh()" [disabled]="loading()">
+          <span *ngIf="!loading()">Atualizar</span>
+          <span *ngIf="loading()">A carregar...</span>
+        </button>
+        <button class="btn accent" (click)="newAppointment()">
+          Nova Marcação
+        </button>
+      </div>
     </div>
   </div>
 

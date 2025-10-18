@@ -101,7 +101,6 @@
 
   <div class="actions">
     <button class="btn accent cta"
-            [class.loading]="submitting()"
             (click)="book()"
             [disabled]="!canSubmit() || submitting()">
       <span *ngIf="!submitting()">Confirmar marcação</span>
