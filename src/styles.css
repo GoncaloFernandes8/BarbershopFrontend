@@ -144,8 +144,9 @@ p.muted {
     border-bottom:1px solid #1f2330;
     transform: translateY(-120%);
     transition: transform .25s ease;
-    z-index: 2000;
+    z-index: 9999;
     box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    isolation: isolate;
   }
   /* quando o checkbox está check -> abre menu */
   .nav-toggle:checked ~ .nav-menu{
