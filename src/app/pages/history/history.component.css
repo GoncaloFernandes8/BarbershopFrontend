@@ -14,6 +14,12 @@
   flex-wrap: wrap;
 }
 
+@media (min-width: 769px) {
+  .header-content {
+    align-items: center;
+  }
+}
+
 .header-text {
   flex: 1;
   min-width: 0;
@@ -37,6 +43,12 @@
   gap: var(--space-3);
   flex-wrap: wrap;
   align-items: center;
+}
+
+@media (min-width: 769px) {
+  .header .actions {
+    flex-direction: row;
+  }
 }
 
 /* Loading State */
