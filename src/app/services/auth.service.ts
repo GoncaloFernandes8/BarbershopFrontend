@@ -1,8 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, tap, map, catchError } from 'rxjs';
+import { Observable, tap, map, catchError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ErrorHandlerService } from './error-handler.service';
 
 export type VerifyEmailResponse = { verified: boolean; message?: string };
 export type RegisterApiResponse = { sent: boolean };
@@ -24,7 +23,6 @@ export type RefreshResponse = { token: string; refreshToken: string; user: AuthU
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
-  private errorHandler = inject(ErrorHandlerService);
   private API = environment.apiUrl;
 
   // LOGIN normal (mantém)
@@ -34,23 +32,17 @@ export class AuthService {
         localStorage.setItem('token', res.token);
         localStorage.setItem('refresh_token', res.refreshToken);
         localStorage.setItem('user', JSON.stringify(res.user));
-        this.errorHandler.showSuccess('Login realizado com sucesso!');
       }),
       catchError((error: HttpErrorResponse) => {
-        this.errorHandler.showError('Erro ao fazer login. Verifique suas credenciais.');
-        return this.errorHandler.handleError(error);
+        return throwError(() => error);
       })
     );
   }
 
   register(data: RegisterPayload): Observable<RegisterApiResponse> {
     return this.http.post<RegisterApiResponse>(`${this.API}/auth/register`, data).pipe(
-      tap(() => {
-        this.errorHandler.showSuccess('Conta criada com sucesso! Verifique seu email.');
-      }),
       catchError((error: HttpErrorResponse) => {
-        this.errorHandler.showError('Erro ao criar conta. Tente novamente.');
-        return this.errorHandler.handleError(error);
+        return throwError(() => error);
       })
     );
   }
@@ -59,14 +51,14 @@ export class AuthService {
     return this.http.post<{ verified: boolean; userId?: number; message?: string }>(
       `${this.API}/auth/verify`, { token }
     ).pipe(
-      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+      catchError((error: HttpErrorResponse) => throwError(() => error))
     );
   }
 
   // REENVIAR EMAIL DE VERIFICAÇÃO (botão no login/registo)
   resendVerification(email: string): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.API}/auth/verify/resend`, { email }).pipe(
-      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+      catchError((error: HttpErrorResponse) => throwError(() => error))
     );
   }
 
@@ -86,7 +78,7 @@ export class AuthService {
       catchError((error: HttpErrorResponse) => {
         // Se o refresh falhar, limpar tokens e redirecionar para login
         this.logout();
-        return this.errorHandler.handleError(error);
+        return throwError(() => error);
       })
     );
   }
@@ -95,7 +87,6 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
-    this.errorHandler.showInfo('Sessão encerrada com sucesso.');
   }
 
   get user(): AuthUser | null {

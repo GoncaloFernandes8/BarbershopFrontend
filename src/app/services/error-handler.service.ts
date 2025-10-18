@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { AuthService } from './auth.service';
 
 export interface ApiError {
   error: string;
@@ -14,7 +13,6 @@ export interface ApiError {
 export class ErrorHandlerService {
   private notifications: string[] = [];
   private router = inject(Router);
-  private authService = inject(AuthService);
   
   handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Ocorreu um erro inesperado.';
@@ -181,8 +179,10 @@ export class ErrorHandlerService {
   }
 
   private handleTokenExpiration(): void {
-    // Limpar dados de autenticação
-    this.authService.clearAuth();
+    // Limpar dados de autenticação diretamente
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
     
     // Mostrar notificação
     this.showError('Sessão expirada. Por favor, faça login novamente.');
