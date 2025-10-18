@@ -31,9 +31,9 @@ export class AuthService {
   login(data: LoginPayload): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.API}/auth/login`, data).pipe(
       tap(res => {
-        localStorage.setItem('auth_token', res.token);
+        localStorage.setItem('token', res.token);
         localStorage.setItem('refresh_token', res.refreshToken);
-        localStorage.setItem('auth_user', JSON.stringify(res.user));
+        localStorage.setItem('user', JSON.stringify(res.user));
         this.errorHandler.showSuccess('Login realizado com sucesso!');
       }),
       catchError((error: HttpErrorResponse) => {
@@ -79,9 +79,9 @@ export class AuthService {
     
     return this.http.post<RefreshResponse>(`${this.API}/auth/refresh`, { refreshToken }).pipe(
       tap(res => {
-        localStorage.setItem('auth_token', res.token);
+        localStorage.setItem('token', res.token);
         localStorage.setItem('refresh_token', res.refreshToken);
-        localStorage.setItem('auth_user', JSON.stringify(res.user));
+        localStorage.setItem('user', JSON.stringify(res.user));
       }),
       catchError((error: HttpErrorResponse) => {
         // Se o refresh falhar, limpar tokens e redirecionar para login
@@ -92,19 +92,44 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('auth_token');
+    localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
-    localStorage.removeItem('auth_user');
+    localStorage.removeItem('user');
     this.errorHandler.showInfo('Sessão encerrada com sucesso.');
   }
 
   get user(): AuthUser | null {
-    const raw = localStorage.getItem('auth_user');
+    const raw = localStorage.getItem('user');
     return raw ? (JSON.parse(raw) as AuthUser) : null;
   }
 
   get isApproved(): boolean {
     const u = this.user;
     return !!u && (u.status ?? 'APPROVED') === 'APPROVED';
+  }
+
+  get isLoggedIn(): boolean {
+    return !!localStorage.getItem('token') && !!this.user;
+  }
+
+  isTokenExpired(): boolean {
+    const token = localStorage.getItem('token');
+    if (!token) return true;
+
+    try {
+      // Decodificar o JWT para verificar a expiração
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const currentTime = Math.floor(Date.now() / 1000);
+      return payload.exp < currentTime;
+    } catch {
+      return true; // Se não conseguir decodificar, considerar expirado
+    }
+  }
+
+  // Método para limpar dados de autenticação (usado pelo ErrorHandler)
+  clearAuth(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
   }
 }

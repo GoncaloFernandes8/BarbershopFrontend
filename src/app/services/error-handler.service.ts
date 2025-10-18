@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
 
 export interface ApiError {
   error: string;
@@ -11,6 +13,8 @@ export interface ApiError {
 @Injectable({ providedIn: 'root' })
 export class ErrorHandlerService {
   private notifications: string[] = [];
+  private router = inject(Router);
+  private authService = inject(AuthService);
   
   handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Ocorreu um erro inesperado.';
@@ -26,49 +30,49 @@ export class ErrorHandlerService {
       if (apiError) {
         errorMessage = apiError.message || errorMessage;
         fieldErrors = apiError.fieldErrors;
-      } else {
-        // Mapear códigos de status HTTP com mensagens mais amigáveis
-        switch (error.status) {
-          case 0:
-            errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
-            break;
-          case 400:
-            errorMessage = 'Dados inválidos. Verifique as informações inseridas.';
-            break;
-          case 401:
-            errorMessage = 'Sessão expirada. Faça login novamente.';
-            break;
-          case 403:
-            errorMessage = 'Acesso negado. Você não tem permissão para esta ação.';
-            break;
-          case 404:
-            errorMessage = 'Recurso não encontrado.';
-            break;
-          case 409:
-            errorMessage = 'Conflito de dados. Esta informação já existe.';
-            break;
-          case 422:
-            errorMessage = 'Dados de validação inválidos. Verifique os campos destacados.';
-            break;
-          case 429:
-            errorMessage = 'Muitas tentativas. Aguarde um momento e tente novamente.';
-            break;
-          case 500:
-            errorMessage = 'Erro interno do servidor. Tente novamente mais tarde.';
-            break;
-          case 503:
-            errorMessage = 'Serviço temporariamente indisponível. Tente novamente em alguns minutos.';
-            break;
-          default:
-            if (error.status >= 500) {
-              errorMessage = 'Erro do servidor. Tente novamente mais tarde.';
-            } else if (error.status >= 400) {
-              errorMessage = 'Erro na requisição. Verifique os dados e tente novamente.';
-            } else {
-              errorMessage = `Erro ${error.status}: ${error.statusText}`;
+          } else {
+            // Mapear códigos de status HTTP com mensagens mais amigáveis
+            switch (error.status) {
+              case 0:
+                errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
+                break;
+              case 400:
+                errorMessage = 'Dados inválidos. Verifique as informações inseridas.';
+                break;
+              case 401:
+                this.handleTokenExpiration();
+                return throwError(() => error); // Não processar mais, já foi tratado
+              case 403:
+                errorMessage = 'Acesso negado. Você não tem permissão para esta ação.';
+                break;
+              case 404:
+                errorMessage = 'Recurso não encontrado.';
+                break;
+              case 409:
+                errorMessage = 'Conflito de dados. Esta informação já existe.';
+                break;
+              case 422:
+                errorMessage = 'Dados de validação inválidos. Verifique os campos destacados.';
+                break;
+              case 429:
+                errorMessage = 'Muitas tentativas. Aguarde um momento e tente novamente.';
+                break;
+              case 500:
+                errorMessage = 'Erro interno do servidor. Tente novamente mais tarde.';
+                break;
+              case 503:
+                errorMessage = 'Serviço temporariamente indisponível. Tente novamente em alguns minutos.';
+                break;
+              default:
+                if (error.status >= 500) {
+                  errorMessage = 'Erro do servidor. Tente novamente mais tarde.';
+                } else if (error.status >= 400) {
+                  errorMessage = 'Erro na requisição. Verifique os dados e tente novamente.';
+                } else {
+                  errorMessage = `Erro ${error.status}: ${error.statusText}`;
+                }
             }
-        }
-      }
+          }
     }
 
     const enhancedError = new HttpErrorResponse({
@@ -174,5 +178,18 @@ export class ErrorHandlerService {
 
   clearNotifications(): void {
     this.notifications = [];
+  }
+
+  private handleTokenExpiration(): void {
+    // Limpar dados de autenticação
+    this.authService.clearAuth();
+    
+    // Mostrar notificação
+    this.showError('Sessão expirada. Por favor, faça login novamente.');
+    
+    // Redirecionar para login após um pequeno delay
+    setTimeout(() => {
+      this.router.navigate(['/login']);
+    }, 2000);
   }
 }
