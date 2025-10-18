@@ -14,7 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(req);
     }
 
-    const token = localStorage.getItem('auth_token');
+    const token = localStorage.getItem('token');
     if (token) {
       const authReq = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
       return next.handle(authReq).pipe(
@@ -39,7 +39,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return this.authService.refreshToken().pipe(
       switchMap(() => {
         this.isRefreshing = false;
-        const newToken = localStorage.getItem('auth_token');
+        const newToken = localStorage.getItem('token');
         const authReq = req.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } });
         return next.handle(authReq);
       }),
