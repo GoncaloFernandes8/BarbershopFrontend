@@ -157,13 +157,18 @@ export class BookingService {
   getUserAppointments(): Observable<AppointmentDto[]> {
     const token = localStorage.getItem('token');
     console.log('Token sendo enviado:', token ? 'Presente' : 'Ausente');
+    console.log('Token completo:', token);
+    console.log('User no localStorage:', localStorage.getItem('user'));
     
     return this.http.get<AppointmentDto[]>(`${this.API}/appointments/my`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     }).pipe(
-      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+      catchError((error: HttpErrorResponse) => {
+        console.log('Erro na requisição getUserAppointments:', error.status, error.message);
+        return this.errorHandler.handleError(error);
+      })
     );
   }
 }
