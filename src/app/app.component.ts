@@ -35,6 +35,20 @@ export class AppComponent implements OnInit { // NEW: implements OnInit
   // NEW: fecha o menu (usado pelos (click) no HTML)
   closeMenu(toggler?: HTMLInputElement | null) {
     if (toggler) toggler.checked = false;
+    // Também fecha o menu via JavaScript
+    this.toggleMenu(false);
+  }
+
+  // NEW: controla o menu via JavaScript
+  toggleMenu(open: boolean) {
+    const menu = document.getElementById('nav-menu');
+    if (menu) {
+      if (open) {
+        menu.style.transform = 'translateY(0)';
+      } else {
+        menu.style.transform = 'translateY(-120%)';
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -44,11 +58,23 @@ export class AppComponent implements OnInit { // NEW: implements OnInit
       // fechar menu
       const toggler = this.el.nativeElement.querySelector('#nav-toggle') as HTMLInputElement | null;
       if (toggler) toggler.checked = false;
+      this.toggleMenu(false);
 
       // 👇 NEW: marcar se estamos em /login ou /registar
       const url = this.router.url;
       this.isAuthPage = url.startsWith('/login') || url.startsWith('/registar');
     });
+
+  // NEW: adicionar listener para o checkbox
+  setTimeout(() => {
+    const toggler = this.el.nativeElement.querySelector('#nav-toggle') as HTMLInputElement | null;
+    if (toggler) {
+      toggler.addEventListener('change', (e) => {
+        const target = e.target as HTMLInputElement;
+        this.toggleMenu(target.checked);
+      });
+    }
+  }, 0);
 }
 
   logout() {

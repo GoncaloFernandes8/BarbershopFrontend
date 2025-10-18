@@ -149,7 +149,7 @@ p.muted {
     isolation: isolate;
   }
   /* quando o checkbox está check -> abre menu */
-  .nav-toggle:checked ~ .nav-menu{
+  #nav-toggle:checked ~ #nav-menu{
     transform: translateY(0);
   }
 
