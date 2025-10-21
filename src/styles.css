@@ -181,6 +181,37 @@ p.muted {
   z-index: 10;
 }
 
+/* ===== DESKTOP: menu inline no header ===== */
+@media (min-width: 821px){
+  .nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+  
+  .nav-menu{
+    position: static;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: auto;
+    transform: none !important;  /* desativa o transform do JS */
+  }
+  
+  .nav-links{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .auth-actions{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+}
+
 
 /* ===== Mobile: nav "sheet" mais caprichado ===== */
 @media (max-width: 820px){
