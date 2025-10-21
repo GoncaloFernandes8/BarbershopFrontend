@@ -179,6 +179,7 @@ p.muted {
   background: rgba(15,15,17,0.6);
   border-bottom: 1px solid #1f2330;
   z-index: 10;
+  margin-bottom: 2rem;
 }
 
 /* ===== DESKTOP: menu inline no header ===== */
