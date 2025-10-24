@@ -9,6 +9,7 @@ import { TimeSlotsComponent } from '../../components/time-slots/time-slots.compo
 
 import { BookingService, ServiceDto, BarberDto } from '../../services/booking.service';
 import { AuthService } from '../../services/auth.service';
+import { LanguageService } from '../../services/language.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -23,6 +24,7 @@ export class BookingComponent implements OnInit {
   private auth = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  protected lang = inject(LanguageService);
   
   // Loading states
   submitting = signal(false);

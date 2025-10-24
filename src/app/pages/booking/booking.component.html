@@ -1,9 +1,9 @@
 <section class="booking">
-  <h1>Fazer marcação</h1>
-  <p class="muted">Escolhe o serviço, o barbeiro e reserva rapidamente no calendário.</p>
+  <h1>{{ lang.t('booking.title') }}</h1>
+  <p class="muted">{{ lang.t('booking.subtitle') }}</p>
 
   <!-- SERVIÇOS -->
-  <h3 class="section-title">Escolhe o serviço</h3>
+  <h3 class="section-title">{{ lang.t('booking.choose_service') }}</h3>
   
   <!-- Loading state para serviços -->
   <div class="loading-grid" *ngIf="loadingServices()">
@@ -35,7 +35,7 @@
   </div>
 
   <!-- BARBEIROS -->
-  <h3 class="section-title">Escolhe o barbeiro</h3>
+  <h3 class="section-title">{{ lang.t('booking.choose_barber') }}</h3>
   
   <!-- Loading state para barbeiros -->
   <div class="loading-grid" *ngIf="loadingBarbers()">
@@ -59,7 +59,7 @@
       <img class="avatar" [src]="getBarberImg(b)" [alt]="b.name" />
       <div class="card-body">
         <div class="card-title">{{ b.name }}</div>
-        <div class="card-meta">Barbeiro</div>
+        <div class="card-meta">{{ lang.t('common.barber') }}</div>
       </div>
     </button>
   </div>
@@ -89,13 +89,13 @@
 
   <!-- NOTAS -->
 <div class="note-field">
-  <label for="note">Notas <span class="muted">(opcional)</span></label>
+  <label for="note">{{ lang.t('booking.notes_label') }} <span class="muted">({{ lang.t('common.optional') }})</span></label>
   <textarea id="note"
             [(ngModel)]="notes"
             name="notes"
             rows="2"
             maxlength="200"
-            placeholder="Ex.: prefiro degradé, atenção à pele sensível..."></textarea>
+            [placeholder]="lang.t('booking.notes_placeholder')"></textarea>
   <div class="charcount">{{ (notes || '').length }}/200</div>
 </div>
 
@@ -104,8 +104,8 @@
     <button class="btn accent cta"
             (click)="book()"
             [disabled]="!canSubmit() || submitting()">
-      <span *ngIf="!submitting()">Confirmar marcação</span>
-      <span *ngIf="submitting()">A confirmar…</span>
+      <span *ngIf="!submitting()">{{ lang.t('booking.confirm') }}</span>
+      <span *ngIf="submitting()">{{ lang.t('common.confirming') }}</span>
     </button>
   </div>
 

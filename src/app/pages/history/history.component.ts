@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, map, finalize } from 'rxjs';
 import { BookingService, AppointmentDto, ServiceDto, BarberDto } from '../../services/booking.service';
 import { AuthService } from '../../services/auth.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-history',
@@ -15,6 +16,7 @@ export class HistoryComponent implements OnInit {
   private bookingService = inject(BookingService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  protected lang = inject(LanguageService);
 
   // Estados
   loading = signal(true);

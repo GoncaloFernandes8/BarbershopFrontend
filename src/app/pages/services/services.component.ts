@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { BookingService, ServiceDto } from '../../services/booking.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   standalone: true,
@@ -12,6 +13,7 @@ import { BookingService, ServiceDto } from '../../services/booking.service';
 })
 export class ServicesComponent implements OnInit {
   private api = inject(BookingService);
+  protected lang = inject(LanguageService);
 
   services = signal<ServiceDto[]>([]);
 

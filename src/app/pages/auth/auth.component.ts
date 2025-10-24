@@ -1,14 +1,15 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, RouterLink } from '@angular/router'; // <— RouterLink aqui
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   standalone: true,
   selector: 'app-auth',
-  imports: [CommonModule, ReactiveFormsModule], // <— removido RouterLink
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
@@ -18,6 +19,7 @@ export class AuthComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private notification = inject(NotificationService);
+  protected lang = inject(LanguageService);
 
   // já tens: import { Component, inject, signal } from '@angular/core';
   pendingEmail = signal<string | null>(null);

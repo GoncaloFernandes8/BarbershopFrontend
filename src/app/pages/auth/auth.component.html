@@ -1,7 +1,7 @@
 <section class="auth card">
   <div class="tabs">
-    <button class="tab" [class.active]="activeTab()==='login'" (click)="switch('login')">Login</button>
-    <button class="tab" [class.active]="activeTab()==='register'" (click)="switch('register')">Criar conta</button>
+    <button class="tab" [class.active]="activeTab()==='login'" (click)="switch('login')">{{ lang.t('auth.login_tab') }}</button>
+    <button class="tab" [class.active]="activeTab()==='register'" (click)="switch('register')">{{ lang.t('auth.register_tab') }}</button>
   </div>
 
   <!-- Só aparece quando o backend respondeu EMAIL_NOT_VERIFIED -->
@@ -10,10 +10,10 @@
           class="btn small"
           (click)="resendVerification()"
           [disabled]="resending()">
-    {{ resending() ? 'A reenviar…' : 'Reenviar email de verificação' }}
+    {{ resending() ? lang.t('common.resending') : lang.t('auth.resend_verification') }}
   </button>
   <span class="muted small" style="margin-left:.5rem">
-    para {{ pendingEmail() }}
+    {{ lang.t('auth.to') }} {{ pendingEmail() }}
   </span>
 </div>
 
@@ -24,26 +24,26 @@
         class="form">
 
     <div class="field">
-      <label for="lemail">Email</label>
+      <label for="lemail">{{ lang.t('auth.email_label') }}</label>
       <input id="lemail"
              type="email"
              formControlName="email"
              autocomplete="email"
              required />
       <div class="error" *ngIf="lf.email.touched && lf.email.invalid">
-        Insere um email válido.
+        {{ lang.t('auth.email_error') }}
       </div>
     </div>
 
     <div class="field pwd">
       <label for="lpass" class="pwd-label">
-        Palavra-passe
+        {{ lang.t('auth.password_label') }}
         <button type="button"
                 class="pwd-emoji-btn"
                 (click)="showPwdLogin.set(!showPwdLogin())"
                 [attr.aria-pressed]="showPwdLogin()"
                 [attr.aria-controls]="'lpass'"
-                [attr.aria-label]="showPwdLogin() ? 'Esconder palavra-passe' : 'Mostrar palavra-passe'">
+                [attr.aria-label]="showPwdLogin() ? lang.t('auth.hide_password') : lang.t('auth.show_password')">
           <img [src]="showPwdLogin() ? 'assets/feliz.png' : 'assets/taparolho.png'"
                alt=""
                class="pwd-icon" />
@@ -56,7 +56,7 @@
              autocomplete="current-password"
              required />
       <div class="error" *ngIf="lf.password.touched && lf.password.invalid">
-        Mínimo 6 caracteres.
+        {{ lang.t('auth.password_error') }}
       </div>
     </div>
 
@@ -70,7 +70,7 @@
 
     <div class="actions">
       <button class="btn accent" type="submit" [disabled]="loading()">
-        {{ loading() ? 'A entrar…' : 'Entrar' }}
+        {{ loading() ? lang.t('common.entering') : lang.t('auth.login_button') }}
       </button>
     </div>
   </form>
@@ -82,38 +82,38 @@
         class="form">
 
     <div class="field">
-      <label for="rname">Nome</label>
+      <label for="rname">{{ lang.t('auth.name_label') }}</label>
       <input id="rname" type="text" formControlName="name" autocomplete="name" required />
       <div class="error" *ngIf="rf.name.touched && rf.name.invalid">
-        Nome é obrigatório.
+        {{ lang.t('auth.name_error') }}
       </div>
     </div>
 
     <div class="field">
-      <label for="rphone">Telemóvel</label>
+      <label for="rphone">{{ lang.t('auth.phone_label') }}</label>
       <input id="rphone" type="tel" formControlName="phone" autocomplete="tel" required />
       <div class="error" *ngIf="rf.phone.touched && rf.phone.invalid">
-        Número inválido.
+        {{ lang.t('auth.phone_error') }}
       </div>
     </div>
 
     <div class="field">
-      <label for="remail">Email</label>
+      <label for="remail">{{ lang.t('auth.email_label') }}</label>
       <input id="remail" type="email" formControlName="email" autocomplete="email" required />
       <div class="error" *ngIf="rf.email.touched && rf.email.invalid">
-        Insere um email válido.
+        {{ lang.t('auth.email_error') }}
       </div>
     </div>
 
     <div class="field pwd">
       <label for="rpass" class="pwd-label">
-        Palavra-passe
+        {{ lang.t('auth.password_label') }}
         <button type="button"
                 class="pwd-emoji-btn"
                 (click)="showPwdReg.set(!showPwdReg())"
                 [attr.aria-pressed]="showPwdReg()"
                 [attr.aria-controls]="'rpass'"
-                [attr.aria-label]="showPwdReg() ? 'Esconder palavra-passe' : 'Mostrar palavra-passe'">
+                [attr.aria-label]="showPwdReg() ? lang.t('auth.hide_password') : lang.t('auth.show_password')">
           <img [src]="showPwdReg() ? 'assets/feliz.png' : 'assets/taparolho.png'"
                alt=""
                class="pwd-icon" />
@@ -126,15 +126,15 @@
              autocomplete="new-password"
              required />
       <div class="error" *ngIf="rf.password.touched && rf.password.invalid">
-        Mínimo 6 caracteres.
+        {{ lang.t('auth.password_error') }}
       </div>
     </div>
 
     <div class="actions">
       <button class="btn accent" type="submit" [disabled]="loading()">
-        {{ loading() ? 'A enviar…' : 'Criar conta' }}
+        {{ loading() ? lang.t('common.sending') : lang.t('auth.register_button') }}
       </button>
-      <button type="button" class="btn ghost" (click)="switch('login')">Já tenho conta</button>
+      <button type="button" class="btn ghost" (click)="switch('login')">{{ lang.t('auth.already_have_account') }}</button>
     </div>
   </form>
 </section>

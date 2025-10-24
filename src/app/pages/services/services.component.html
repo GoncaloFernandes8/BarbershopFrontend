@@ -1,13 +1,13 @@
 <section class="services">
-  <h1>Serviços</h1>
-  <p class="muted">Transparência e preços honestos.</p>
+  <h1>{{ lang.t('services.title') }}</h1>
+  <p class="muted">{{ lang.t('services.subtitle') }}</p>
 
   <div class="services-grid">
     <article class="service-card" *ngFor="let s of services(); trackBy: trackById">
       <div class="media">
         <img class="thumb" [src]="getServiceImg(s.name)" [alt]="s.name" loading="lazy" />
-        <span class="chip duration">{{ s.durationMin }} min</span>
-        <span *ngIf="s.name.toLowerCase().includes('corte e barba')" class="chip popular">Mais popular</span>
+        <span class="chip duration">{{ s.durationMin }} {{ lang.t('common.minutes') }}</span>
+        <span *ngIf="s.name.toLowerCase().includes('corte e barba')" class="chip popular">{{ lang.t('common.popular') }}</span>
       </div>
 
       <div class="body">
@@ -25,7 +25,7 @@
 
         <div class="actions">
           <!-- passa o id do serviço para pré-selecionar na página de marcação -->
-          <a class="btn accent" routerLink="/marcacao" [queryParams]="{ servico: s.id }">Marcar</a>
+          <a class="btn accent" routerLink="/marcacao" [queryParams]="{ servico: s.id }">{{ lang.t('common.book') }}</a>
         </div>
       </div>
     </article>
