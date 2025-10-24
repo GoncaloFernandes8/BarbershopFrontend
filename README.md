@@ -77,6 +77,15 @@ src/
 
 O projeto está configurado para se conectar com a API backend. Certifique-se de que o backend esteja rodando na porta configurada.
 
+## 👨‍💻 Autor
+
+**Gonçalo Fernandes**
+- GitHub: [@GoncaloFernandes8](https://github.com/GoncaloFernandes8)
+- LinkedIn: [Gonçalo Fernandes](https://www.linkedin.com/in/goncalo-fernandes88/)
+- Email: goncalo8fernandes8@gmail.com
+
 ## 📄 Licença
 
-Projeto desenvolvido para fins educacionais e comerciais.
+Copyright © 2025 Gonçalo Fernandes. Todos os direitos reservados.
+
+Este projeto foi desenvolvido para fins educacionais e de portfólio.
