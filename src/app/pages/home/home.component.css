@@ -89,13 +89,18 @@ section:first-of-type { margin-top: 0; }
 }
 
 .hero .actions .btn {
-  padding: 0.875rem 1.5rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
+  /* Force exact same dimensions */
+  padding: 0.875rem 1.75rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important; /* Same weight for both */
+  line-height: 1.5 !important;
+  height: auto;
+  min-height: 48px;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  box-sizing: border-box;
 }
 
 .hero .btn.accent{ box-shadow: 0 10px 24px rgba(195,255,90,.22); }
