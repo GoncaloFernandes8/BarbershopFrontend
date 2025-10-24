@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router'; // <— RouterLink aqui
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   standalone: true,
@@ -16,6 +17,7 @@ export class AuthComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private notification = inject(NotificationService);
 
   // já tens: import { Component, inject, signal } from '@angular/core';
   pendingEmail = signal<string | null>(null);
@@ -53,10 +55,14 @@ export class AuthComponent {
   this.loading.set(true);
   const { email, password } = this.loginForm.getRawValue();
   this.auth.login({ email, password }).subscribe({
-    next: () => { this.loading.set(false); this.router.navigateByUrl('/marcacao'); },
+    next: () => { 
+      this.loading.set(false); 
+      this.notification.success('Login efetuado com sucesso!');
+      this.router.navigateByUrl('/marcacao'); 
+    },
     error: (err) => {
       this.loading.set(false);
-      this.note.set(err?.error?.message ?? 'Credenciais inválidas.');
+      this.notification.error(err?.error?.message ?? 'Credenciais inválidas.');
     }
   });
 }
@@ -70,11 +76,11 @@ resendVerification(){
   this.auth.resendVerification(email).subscribe({
     next: () => {
       this.resending.set(false);
-      this.note.set('Reenviámos o email de verificação. Verifica a tua caixa de entrada.');
+      this.notification.success('Reenviámos o email de verificação. Verifica a tua caixa de entrada.');
     },
     error: () => {
       this.resending.set(false);
-      this.note.set('Não foi possível reenviar agora. Tenta mais tarde.');
+      this.notification.error('Não foi possível reenviar agora. Tenta mais tarde.');
     }
   });
 }
@@ -86,12 +92,12 @@ resendVerification(){
   this.loading.set(true);
   this.auth.register(this.registerForm.getRawValue()).subscribe({
     next: () => {
-      this.note.set('Enviámos um email de confirmação. Abre o link para concluir o registo.');
+      this.notification.success('Enviámos um email de confirmação. Abre o link para concluir o registo.', 6000);
       this.activeTab.set('login');
       this.loading.set(false);
     },
     error: (err) => {
-      this.note.set(err?.error?.message || 'Não foi possível registar.');
+      this.notification.error(err?.error?.message || 'Não foi possível registar.');
       this.loading.set(false);
     }
   });

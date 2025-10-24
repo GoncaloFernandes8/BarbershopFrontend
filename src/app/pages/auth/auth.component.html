@@ -4,8 +4,6 @@
     <button class="tab" [class.active]="activeTab()==='register'" (click)="switch('register')">Criar conta</button>
   </div>
 
-  <p class="muted small" *ngIf="note()">{{ note() }}</p>
-
   <!-- Só aparece quando o backend respondeu EMAIL_NOT_VERIFIED -->
 <div *ngIf="pendingEmail()" class="resend">
   <button type="button"

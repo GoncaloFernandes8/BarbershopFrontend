@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } from '@angular/router'; // NEW
 import { AuthService } from './services/auth.service';
 import { filter } from 'rxjs/operators'; // NEW
+import { NotificationToastComponent } from './components/notification-toast/notification-toast.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, NotificationToastComponent],
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit { // NEW: implements OnInit
