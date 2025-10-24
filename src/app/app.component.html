@@ -17,7 +17,7 @@
     <div id="nav-menu" class="nav-menu">
       <div class="nav-links">
         <a routerLink="/" [routerLinkActiveOptions]="{exact:true}"
-           routerLinkActive="active" (click)="closeMenu(navToggler)">{{ lang.t('nav.home') }}</a>
+                                                                                                                                                                                                                                           routerLinkActive="active" (click)="closeMenu(navToggler)">{{ lang.t('nav.home') }}</a>
 
         <a routerLink="/servicos" routerLinkActive="active"
            (click)="closeMenu(navToggler)">{{ lang.t('nav.services') }}</a>
@@ -25,7 +25,7 @@
         <a routerLink="/marcacao" routerLinkActive="active"
            (click)="closeMenu(navToggler)">{{ lang.t('nav.booking') }}</a>
 
-        <a *ngIf="isLoggedIn" routerLink="/historico" routerLinkActive="active"
+        <a *ngIf="isLoggedIn" routerLink="/historico" routerLinkActive="active"                                                                             
            (click)="closeMenu(navToggler)">{{ lang.t('nav.history') }}</a>
       </div>
 

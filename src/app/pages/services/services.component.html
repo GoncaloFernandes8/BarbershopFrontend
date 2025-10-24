@@ -16,10 +16,10 @@
 
         <div class="meta">
           <span class="price">
-            <strong>{{ euros(s.priceCents) | number:'1.2-2':'pt-PT' }}</strong> €
+            <strong>{{ euros(s.priceCents) | number:'1.2-2':'pt-PT' }}&nbsp;€</strong>
           </span>
           <span class="permin" *ngIf="s.durationMin">
-            {{ (euros(s.priceCents)/s.durationMin) | number:'1.2-2':'pt-PT' }} €/min
+            {{ (euros(s.priceCents)/s.durationMin) | number:'1.2-2':'pt-PT' }}&nbsp;€/min
           </span>
         </div>
 
