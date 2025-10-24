@@ -339,7 +339,7 @@ p.muted {
   backdrop-filter: blur(24px) saturate(180%);
   background: rgba(15, 15, 17, 0.8);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  z-index: 100;
+  z-index: 1000;
   margin-bottom: var(--space-8);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }

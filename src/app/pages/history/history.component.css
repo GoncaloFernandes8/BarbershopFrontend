@@ -4,7 +4,8 @@
 
 .header {
   margin-bottom: var(--space-8);
-  position: relative; /* Garante que não fica sticky */
+  position: relative;
+  z-index: 1; /* Sempre abaixo do header global (z-index: 100) */
 }
 
 .header-content {
@@ -17,7 +18,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
-  position: relative; /* Garante que não fica sticky */
+  position: relative;
 }
 
 @media (min-width: 769px) {
