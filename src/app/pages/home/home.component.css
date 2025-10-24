@@ -68,10 +68,6 @@ section:first-of-type { margin-top: 0; }
   margin: 0; /* Reset all margins */
 }
 
-.hero .badge {
-  margin-bottom: var(--space-m);
-}
-
 .hero h1{
   margin-bottom: var(--space-m);
   font-weight: 900;
@@ -84,11 +80,22 @@ section:first-of-type { margin-top: 0; }
   line-height: 1.6;
 }
 
-/* Botões organizados com espaçamento consistente */
+/* Botões perfeitamente alinhados */
 .hero .actions {
   display: flex;
   gap: var(--space-m);
   flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.hero .actions .btn {
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
 }
 
 .hero .btn.accent{ box-shadow: 0 10px 24px rgba(195,255,90,.22); }
