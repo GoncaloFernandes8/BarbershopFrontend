@@ -491,12 +491,57 @@ input, select, textarea, button {
   line-height: 1.2;
 }
 
-/* Se queres “parecer” menor no mobile, faz scale visual sem baixar o font-size real */
+/* Se queres "parecer" menor no mobile, faz scale visual sem baixar o font-size real */
 @media (max-width: 820px){
   .field.smol input,
   .field.smol select,
   .field.smol textarea{
     transform: scale(0.92);     /* aparência menor */
     transform-origin: left center;
+  }
+}
+
+/* ===== Animação de Logout ===== */
+body.logging-out {
+  animation: fadeOut 0.6s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+body.logging-out main {
+  animation: slideOutDown 0.6s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+body.logging-out .header {
+  animation: slideOutUp 0.6s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-20px);
+    opacity: 0;
   }
 }

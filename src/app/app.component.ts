@@ -2,6 +2,7 @@ import { Component, inject, OnInit, ElementRef } from '@angular/core'; // NEW
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } from '@angular/router'; // NEW
 import { AuthService } from './services/auth.service';
+import { NotificationService } from './services/notification.service';
 import { filter } from 'rxjs/operators'; // NEW
 import { NotificationToastComponent } from './components/notification-toast/notification-toast.component';
 
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit { // NEW: implements OnInit
   private router = inject(Router);
   private el = inject(ElementRef<HTMLElement>); // NEW
   protected auth = inject(AuthService);
+  private notification = inject(NotificationService);
 
   isAuthPage = false;
 
@@ -79,8 +81,19 @@ export class AppComponent implements OnInit { // NEW: implements OnInit
 }
 
   logout() {
-    this.auth.logout();
-    this.router.navigateByUrl('/');
-    // não precisa fechar aqui — o NavigationEnd já trata
+    // Adicionar classe de animação ao body
+    document.body.classList.add('logging-out');
+    
+    // Mostrar notificação
+    this.notification.success('Sessão terminada. Até breve!', 3000);
+    
+    // Aguardar animação antes de fazer logout
+    setTimeout(() => {
+      this.auth.logout();
+      this.router.navigateByUrl('/').then(() => {
+        // Remover classe após navegação
+        document.body.classList.remove('logging-out');
+      });
+    }, 600);
   }
 }
