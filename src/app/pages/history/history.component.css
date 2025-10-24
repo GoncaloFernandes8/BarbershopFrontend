@@ -35,8 +35,13 @@
 .header-text h1 {
   margin: 0 0 var(--space-2) 0;
   color: var(--color-text-primary);
-  font-size: var(--font-size-3xl);
+  font-size: clamp(1.8rem, 4vw, 2.2rem);
   font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  hyphens: none;
+  word-break: keep-all;
+  overflow-wrap: normal;
 }
 
 .header-text p {

@@ -33,6 +33,17 @@ section:first-of-type { margin-top: 0; }
   align-items: stretch;
   margin-bottom: var(--space-xl);
 }
+
+/* Hero title - ajustado para nunca quebrar linha */
+.hero .card h1 {
+  font-size: clamp(1.9rem, 4.8vw, 2.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  hyphens: none;
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
 .hero .card{
   position: relative; isolation: isolate;
   padding: clamp(1rem, 2.2vw, 1.6rem);
