@@ -115,6 +115,14 @@ section:first-of-type { margin-top: 0; }
   box-shadow: 0 10px 22px rgba(0,0,0,.32);
 }
 
+/* Centralizar títulos das sections testimonials, faq, map */
+.testimonials h2,
+.faq h2,
+.map h2 {
+  text-align: center;
+  margin-bottom: var(--space-l);
+}
+
 
 
 /* ===== Divisor Barber Pole ===== */

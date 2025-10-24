@@ -4,6 +4,7 @@
 
 .header {
   margin-bottom: var(--space-8);
+  position: relative; /* Garante que não fica sticky */
 }
 
 .header-content {
@@ -16,6 +17,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
+  position: relative; /* Garante que não fica sticky */
 }
 
 @media (min-width: 769px) {
@@ -80,8 +82,12 @@
 }
 
 .empty-icon {
-  font-size: 4rem;
   opacity: 0.6;
+  color: var(--color-primary);
+}
+
+.empty-icon svg {
+  display: block;
 }
 
 .empty-state h3 {
@@ -219,6 +225,16 @@
   margin-top: var(--space-4);
   padding-top: var(--space-4);
   border-top: 1px solid var(--color-border);
+}
+
+.appointment-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.appointment-actions .btn svg {
+  flex-shrink: 0;
 }
 
 .btn.error {
