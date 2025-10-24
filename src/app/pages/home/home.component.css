@@ -62,12 +62,35 @@ section:first-of-type { margin-top: 0; }
   top:-140px; right:-120px; animation: float 18s ease-in-out infinite;
 }
 @keyframes float { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-14px) } }
+
+/* Hero - Espaçamentos consistentes e organizados */
+.hero .card > * {
+  margin: 0; /* Reset all margins */
+}
+
+.hero .badge {
+  margin-bottom: var(--space-m);
+}
+
 .hero h1{
-  margin:.25rem 0 1rem 0;
+  margin-bottom: var(--space-m);
   font-weight: 900;
   background: linear-gradient(90deg, #fff, #dfe7f5 50%, var(--accent));
   -webkit-background-clip:text; background-clip:text; color: transparent;
 }
+
+.hero p {
+  margin-bottom: var(--space-l);
+  line-height: 1.6;
+}
+
+/* Botões organizados com espaçamento consistente */
+.hero .actions {
+  display: flex;
+  gap: var(--space-m);
+  flex-wrap: wrap;
+}
+
 .hero .btn.accent{ box-shadow: 0 10px 24px rgba(195,255,90,.22); }
 .hero .btn.accent:hover{ transform: translateY(-2px) scale(1.01); }
 
