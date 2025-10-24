@@ -1,9 +1,10 @@
-import { Component, inject, OnInit, ElementRef } from '@angular/core'; // NEW
+import { Component, inject, OnInit, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } from '@angular/router'; // NEW
+import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { NotificationService } from './services/notification.service';
-import { filter } from 'rxjs/operators'; // NEW
+import { LanguageService } from './services/language.service';
+import { filter } from 'rxjs/operators';
 import { NotificationToastComponent } from './components/notification-toast/notification-toast.component';
 
 @Component({
@@ -12,12 +13,13 @@ import { NotificationToastComponent } from './components/notification-toast/noti
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, NotificationToastComponent],
   templateUrl: './app.component.html'
 })
-export class AppComponent implements OnInit { // NEW: implements OnInit
+export class AppComponent implements OnInit {
   year = new Date().getFullYear();
   private router = inject(Router);
-  private el = inject(ElementRef<HTMLElement>); // NEW
+  private el = inject(ElementRef<HTMLElement>);
   protected auth = inject(AuthService);
   private notification = inject(NotificationService);
+  protected lang = inject(LanguageService);
 
   isAuthPage = false;
 
@@ -80,12 +82,16 @@ export class AppComponent implements OnInit { // NEW: implements OnInit
   }, 0);
 }
 
+  toggleLanguage() {
+    this.lang.toggleLanguage();
+  }
+
   logout() {
     // Adicionar classe de animação ao body
     document.body.classList.add('logging-out');
     
-    // Mostrar notificação
-    this.notification.success('Sessão terminada. Até breve!', 3000);
+    // Mostrar notificação (traduzida)
+    this.notification.success(this.lang.t('auth.logout_success'), 3000);
     
     // Aguardar animação antes de fazer logout
     setTimeout(() => {

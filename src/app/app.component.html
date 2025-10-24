@@ -17,26 +17,35 @@
     <div id="nav-menu" class="nav-menu">
       <div class="nav-links">
         <a routerLink="/" [routerLinkActiveOptions]="{exact:true}"
-           routerLinkActive="active" (click)="closeMenu(navToggler)">Início</a>
+           routerLinkActive="active" (click)="closeMenu(navToggler)">{{ lang.t('nav.home') }}</a>
 
         <a routerLink="/servicos" routerLinkActive="active"
-           (click)="closeMenu(navToggler)">Serviços</a>
+           (click)="closeMenu(navToggler)">{{ lang.t('nav.services') }}</a>
 
         <a routerLink="/marcacao" routerLinkActive="active"
-           (click)="closeMenu(navToggler)">Marcação</a>
+           (click)="closeMenu(navToggler)">{{ lang.t('nav.booking') }}</a>
 
         <a *ngIf="isLoggedIn" routerLink="/historico" routerLinkActive="active"
-           (click)="closeMenu(navToggler)">Histórico</a>
+           (click)="closeMenu(navToggler)">{{ lang.t('nav.history') }}</a>
       </div>
 
       <div class="auth-actions">
+        <!-- Seletor de Idioma -->
+        <button class="language-selector" 
+                (click)="toggleLanguage()"
+                [title]="lang.currentLanguage() === 'pt' ? 'Switch to English' : 'Mudar para Português'"
+                aria-label="Change language">
+          <span class="flag">{{ lang.currentLanguage() === 'pt' ? '🇵🇹' : '🇬🇧' }}</span>
+          <span class="lang-code">{{ lang.currentLanguage().toUpperCase() }}</span>
+        </button>
+
         <!-- antes: *ngIf="isHome && !isLoggedIn" -->
-        <a *ngIf="!isLoggedIn && !isAuthPage" routerLink="/login" class="btn accent small">Login</a>
+        <a *ngIf="!isLoggedIn && !isAuthPage" routerLink="/login" class="btn accent small">{{ lang.t('nav.login') }}</a>
 
         <!-- apenas o botão Sair quando autenticado -->
         <button *ngIf="isLoggedIn"
                 class="btn logout"
-                (click)="logout(); closeMenu(navToggler)">Sair</button>
+                (click)="logout(); closeMenu(navToggler)">{{ lang.t('nav.logout') }}</button>
       </div>
     </div>
   </nav>
@@ -57,7 +66,7 @@
           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
           <circle cx="12" cy="10" r="3"/>
         </svg>
-        Rua Principal, 123
+        {{ lang.t('footer.address') }}
       </span>
       <span class="separator">·</span>
       <span class="footer-item">
@@ -68,7 +77,7 @@
       </span>
     </div>
     <div class="footer-credit">
-      Desenvolvido por Gonçalo Fernandes
+      {{ lang.t('footer.developed') }}
     </div>
   </div>
 </footer>
