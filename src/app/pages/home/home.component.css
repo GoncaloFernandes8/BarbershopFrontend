@@ -249,7 +249,7 @@ section:first-of-type { margin-top: 0; }
 
 /* ===== Testimonials ===== */
 .testimonials { margin-top: var(--space-xl); }
-.testimonials h2 { margin-bottom: var(--space-s); }
+/* h2 styling moved to unified section at line ~120 */
 .t-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: var(--space-m) }
 @media (max-width:900px){ .t-grid{ grid-template-columns: 1fr } }
 .t{ margin:0; padding:1rem; border:1px solid var(--stroke); border-radius:16px;
@@ -262,7 +262,7 @@ figcaption{ color:#a0a7b4; font-size:.95rem }
 
 /* ===== FAQ ===== */
 .faq { margin-top: var(--space-xl); }
-.faq h2 { margin-bottom: var(--space-s); }
+/* h2 styling moved to unified section at line ~120 */
 .faq details{
   margin:.55rem 0; padding:.75rem .9rem; border-radius:12px;
   border:1px solid var(--stroke);
@@ -279,7 +279,7 @@ figcaption{ color:#a0a7b4; font-size:.95rem }
 
 /* ===== Mapa ===== */
 .map { margin-top: var(--space-xl); }
-.map h2 { margin-bottom: var(--space-s); }
+/* h2 styling moved to unified section at line ~120 */
 .map-embed{ aspect-ratio: 16 / 9; border-radius:12px; overflow:hidden; border:1px solid var(--stroke); margin:.6rem 0 var(--space-s) }
 .map-embed iframe{ width:100%; height:100%; border:0 }
 .map-ctas{ display:flex; gap:.6rem; flex-wrap:wrap; justify-content:center; }
