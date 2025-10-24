@@ -79,7 +79,7 @@ body {
   font-weight: var(--font-weight-semibold);
 }
 
-/* Subtle underline effect on active */
+/* Subtle underline effect on active (desktop only) */
 .nav a.active::after {
   content: '';
   position: absolute;
@@ -89,6 +89,13 @@ body {
   height: 2px;
   background: var(--color-primary);
   border-radius: 2px;
+}
+
+/* Remove underline on mobile */
+@media (max-width: 820px) {
+  .nav a.active::after {
+    display: none;
+  }
 }
 
 h1 { 
@@ -320,6 +327,7 @@ p.muted {
   background: rgba(15, 15, 17, 0.8);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   z-index: 100;
+  margin-bottom: var(--space-8);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -336,6 +344,13 @@ p.muted {
   opacity: 0;
   transition: opacity 0.3s;
   pointer-events: none;
+}
+
+/* Espaçamento entre header e conteúdo */
+@media (max-width: 768px) {
+  .header {
+    margin-bottom: var(--space-6);
+  }
 }
 
 /* ===== DESKTOP: menu inline no header ===== */
