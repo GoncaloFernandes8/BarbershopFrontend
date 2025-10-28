@@ -64,7 +64,8 @@
 }
 
 .btn.accent:hover {
-  background: var(--color-primary-hover);
+  background: var(--color-background);
+  color: var(--color-primary);
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(195, 255, 90, 0.25);
 }
