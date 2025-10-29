@@ -10,6 +10,7 @@ export const routes: Routes = [
   { path: 'marcacao', loadComponent: () => import('./pages/booking/booking.component').then(m => m.BookingComponent), canActivate: [approvedGuard], title: 'Marcação · Barbearia' },
   { path: 'historico', loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent), canActivate: [approvedGuard], title: 'Histórico · Barbearia' },
   { path: 'confirmar', loadComponent: () => import('./pages/confirm/confirm.component').then(m => m.ConfirmComponent), title: 'Confirmar email' },
+  { path: 'definir-senha', loadComponent: () => import('./pages/set-password/set-password.component').then(m => m.SetPasswordComponent), title: 'Definir senha · Barbearia' },
   { path: '**', loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent), title: 'Não encontrado' },
 
 ];
