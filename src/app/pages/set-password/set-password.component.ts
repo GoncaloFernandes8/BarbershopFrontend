@@ -75,7 +75,7 @@ export class SetPasswordComponent implements OnInit {
               this.success = true;
               // Redirecionar para login após 3 segundos
               setTimeout(() => {
-                this.router.navigate(['/auth']);
+                this.router.navigate(['/login']);
               }, 3000);
             } else {
               this.error = true;
@@ -96,7 +96,7 @@ export class SetPasswordComponent implements OnInit {
   }
 
   goToLogin() {
-    this.router.navigate(['/auth']);
+    this.router.navigate(['/login']);
   }
 }
 
