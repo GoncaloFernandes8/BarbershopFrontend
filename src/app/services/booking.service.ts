@@ -31,6 +31,14 @@ export type BarberDto = {
   id: number; name: string; active: boolean; createdAt: string;
 };
 
+export type WorkingHoursDto = {
+  id: number;
+  barberId: number;
+  dayOfWeek: number; // 1=Monday ... 7=Sunday
+  startTime: string;
+  endTime: string;
+};
+
 @Injectable({ providedIn: 'root' })
 export class BookingService {
   private http = inject(HttpClient);
@@ -86,6 +94,12 @@ export class BookingService {
   
   getAvailability(barberId: number, serviceId: number, ymd: string): Observable<string[]> {
     return this.http.get<string[]>(`${this.API}/availability`, { params: { barberId, serviceId, date: ymd } }).pipe(
+      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
+  }
+
+  getBarberWorkingHours(barberId: number): Observable<WorkingHoursDto[]> {
+    return this.http.get<WorkingHoursDto[]>(`${this.API}/working-hours`, { params: { barberId } }).pipe(
       catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
     );
   }

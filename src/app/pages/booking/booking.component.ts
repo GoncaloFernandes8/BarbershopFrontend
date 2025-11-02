@@ -7,7 +7,7 @@ import { combineLatest, map, finalize} from 'rxjs';
 import { CalendarMonthComponent } from '../../components/calendar-month/calendar-month.component';
 import { TimeSlotsComponent } from '../../components/time-slots/time-slots.component';
 
-import { BookingService, ServiceDto, BarberDto } from '../../services/booking.service';
+import { BookingService, ServiceDto, BarberDto, WorkingHoursDto } from '../../services/booking.service';
 import { AuthService } from '../../services/auth.service';
 import { LanguageService } from '../../services/language.service';
 import { Router } from '@angular/router';
@@ -40,6 +40,7 @@ export class BookingComponent implements OnInit {
   barbers = signal<BarberDto[]>([]);
   selectedServiceId = signal<number | null>(null);
   selectedBarberId = signal<number | null>(null);
+  barberWorkingHours = signal<WorkingHoursDto[]>([]);
 
   // calendário
   todayYmd = toYmd(new Date());
@@ -50,6 +51,12 @@ export class BookingComponent implements OnInit {
   slots = signal<string[]>([]);
   selectedSlot = signal<string | null>(null);
   note = signal<string | null>(null);
+
+  // computed: verifica se o barbeiro trabalha ao domingo (dayOfWeek = 7)
+  barberWorksOnSunday = computed(() => {
+    const hours = this.barberWorkingHours();
+    return hours.some(wh => wh.dayOfWeek === 7);
+  });
 
   ngOnInit(): void {
     // Carregar dados com estados de loading
@@ -85,6 +92,11 @@ export class BookingComponent implements OnInit {
     this.selectedServiceId.set(svcId);
     this.selectedBarberId.set(barbId);
 
+    // carregar horários de trabalho do barbeiro
+    if (barbId) {
+      this.loadBarberWorkingHours(barbId);
+    }
+
     // carregar disponibilidade uma única vez
     this.selectedSlot.set(null);
     this.loadAvailability();
@@ -115,6 +127,13 @@ export class BookingComponent implements OnInit {
     this.api.getAvailability(b, s, d).subscribe({
       next: list => { this.slots.set(list); this.loadingSlots.set(false); },
       error: () => { this.slots.set([]); this.loadingSlots.set(false); }
+    });
+  }
+
+  loadBarberWorkingHours(barberId: number) {
+    this.api.getBarberWorkingHours(barberId).subscribe({
+      next: hours => this.barberWorkingHours.set(hours),
+      error: () => this.barberWorkingHours.set([])
     });
   }
 
@@ -163,6 +182,7 @@ onPickService(id: number) {
     if (this.selectedBarberId() === id) return;
     this.selectedBarberId.set(id);
     this.selectedSlot.set(null);
+    this.loadBarberWorkingHours(id);
     this.loadAvailability();
   }
 

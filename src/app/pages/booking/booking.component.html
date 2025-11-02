@@ -70,7 +70,7 @@
       [month]="month()"
       [selectedDate]="selectedDate() || undefined"
       [minDate]="todayYmd"
-      [disableSundays]="true"
+      [disableSundays]="!barberWorksOnSunday()"
       (monthChange)="onMonthChange($event)"
       (selectDate)="onSelectDate($event)">
     </app-calendar-month>
