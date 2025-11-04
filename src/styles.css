@@ -293,24 +293,30 @@ p.muted {
 
 /* Mobile layout */
 @media (max-width: 820px){
-  .nav{ gap:.5rem; }
+  .nav{ gap:.5rem; padding: 1rem; }
   .nav-burger{ display:block; }
   .nav-menu{
-    position: fixed; left:0; right:0; top:58px; /* abaixo do header */
-    display:grid; gap:.8rem;
+    position: absolute; 
+    left: 0; 
+    right: 0; 
+    top: 100%; /* Alinha exatamente abaixo do header */
+    display: grid; 
+    gap: .8rem;
     padding: .9rem 1rem 1.2rem;
     background: rgba(15,15,17,.95);
     backdrop-filter: blur(15px);
-    border-bottom:1px solid #1f2330;
-    transform: translateY(-120%);
+    border-bottom: 1px solid #1f2330;
+    transform: translateY(-100%);
     transition: transform .25s ease;
-    z-index: 9999;
+    z-index: 999;
     box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     isolation: isolate;
+    pointer-events: none; /* Não bloqueia interação quando fechado */
   }
   /* quando o checkbox está check -> abre menu */
   #nav-toggle:checked ~ #nav-menu{
     transform: translateY(0);
+    pointer-events: auto; /* Permite interação quando aberto */
   }
 
   .nav-links{
@@ -344,6 +350,14 @@ p.muted {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Mobile: Header precisa ser relative para o menu se posicionar corretamente */
+@media (max-width: 820px) {
+  .header {
+    position: relative;
+    margin-bottom: var(--space-6);
+  }
+}
+
 /* Subtle shadow on scroll */
 .header::before {
   content: '';
@@ -359,12 +373,7 @@ p.muted {
   pointer-events: none;
 }
 
-/* Espaçamento entre header e conteúdo */
-@media (max-width: 768px) {
-  .header {
-    margin-bottom: var(--space-6);
-  }
-}
+/* Espaçamento entre header e conteúdo - Já definido acima */
 
 /* ===== DESKTOP: menu inline no header ===== */
 @media (min-width: 821px){
