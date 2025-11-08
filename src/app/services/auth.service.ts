@@ -62,6 +62,20 @@ export class AuthService {
     );
   }
 
+  // FORGOT PASSWORD - Solicitar reset
+  forgotPassword(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.API}/auth/forgot-password`, { email }).pipe(
+      catchError((error: HttpErrorResponse) => throwError(() => error))
+    );
+  }
+
+  // RESET PASSWORD - Confirmar nova password
+  resetPassword(token: string, newPassword: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.API}/auth/reset-password`, { token, newPassword }).pipe(
+      catchError((error: HttpErrorResponse) => throwError(() => error))
+    );
+  }
+
   // REFRESH TOKEN
   refreshToken(): Observable<RefreshResponse> {
     const refreshToken = localStorage.getItem('refresh_token');

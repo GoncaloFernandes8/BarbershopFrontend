@@ -72,6 +72,9 @@
       <button class="btn accent" type="submit" [disabled]="loading()">
         {{ loading() ? lang.t('common.entering') : lang.t('auth.login_button') }}
       </button>
+      <button type="button" class="btn ghost small" (click)="openForgotPasswordModal()">
+        Esqueci-me da password
+      </button>
     </div>
   </form>
 
@@ -138,3 +141,34 @@
     </div>
   </form>
 </section>
+
+<!-- MODAL: Esqueci-me da password -->
+<div class="modal-overlay" *ngIf="showForgotPasswordModal()" (click)="closeForgotPasswordModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Recuperar password</h2>
+      <button type="button" class="modal-close" (click)="closeForgotPasswordModal()" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="muted">Insere o teu email e enviaremos instruções para redefinires a tua password.</p>
+      <div class="field">
+        <label for="forgot-email">Email</label>
+        <input 
+          id="forgot-email" 
+          type="email" 
+          [(ngModel)]="forgotPasswordEmail"
+          placeholder="exemplo@email.com"
+          [disabled]="sendingResetEmail()"
+          (keyup.enter)="sendResetEmail()" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn ghost" (click)="closeForgotPasswordModal()" [disabled]="sendingResetEmail()">
+        Cancelar
+      </button>
+      <button type="button" class="btn accent" (click)="sendResetEmail()" [disabled]="sendingResetEmail()">
+        {{ sendingResetEmail() ? 'A enviar...' : 'Enviar instruções' }}
+      </button>
+    </div>
+  </div>
+</div>

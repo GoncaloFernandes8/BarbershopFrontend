@@ -20,8 +20,9 @@ input{
 .error{ color:#ff6b6b; font-size:.9rem; margin-top:.2rem }
 .muted.small{ font-size:.95rem }
 
-.actions{ display:flex; gap:.6rem; flex-wrap:wrap; margin-top:.2rem }
+.actions{ display:flex; gap:.6rem; flex-wrap:wrap; margin-top:.2rem; flex-direction: column; }
 .btn.ghost{ background: transparent; border:1px solid #2a3042; color:#e9eef7 }
+.btn.small{ font-size: 0.9rem; padding: 0.6rem 1rem; }
 
 /* Emoji-botão: maior e centrado no campo */
 .pwd{ position:relative; }
@@ -82,4 +83,88 @@ input{
 }
 
 .resend { margin: .25rem 0 .5rem; display: flex; align-items: center; gap: .5rem; }
-.btn.small { padding:.55rem .8rem; border-radius:10px; font-size:.95rem; }
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: #16181d;
+  border-radius: 16px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid #2a3042;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid #2a3042;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #e9eef7;
+  font-weight: 700;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: #9ca3af;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: #2a3042;
+  color: #e9eef7;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-body .muted {
+  margin-bottom: 1.2rem;
+  color: #9ca3af;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  border-top: 1px solid #2a3042;
+}
+
+.modal-actions .btn {
+  flex: 1;
+  max-width: 180px;
+}

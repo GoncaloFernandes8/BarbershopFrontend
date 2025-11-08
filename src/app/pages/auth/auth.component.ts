@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
@@ -9,7 +9,7 @@ import { LanguageService } from '../../services/language.service';
 @Component({
   standalone: true,
   selector: 'app-auth',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
@@ -30,6 +30,11 @@ export class AuthComponent {
   showPwdReg = signal(false);
   loading = signal(false);
   note = signal<string | null>(null);
+  
+  // Forgot password
+  showForgotPasswordModal = signal(false);
+  forgotPasswordEmail = signal('');
+  sendingResetEmail = signal(false);
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -106,6 +111,37 @@ resendVerification(){
 }
 
   
+
+  openForgotPasswordModal() {
+    this.showForgotPasswordModal.set(true);
+    this.forgotPasswordEmail.set('');
+  }
+
+  closeForgotPasswordModal() {
+    this.showForgotPasswordModal.set(false);
+    this.forgotPasswordEmail.set('');
+  }
+
+  sendResetEmail() {
+    const email = this.forgotPasswordEmail().trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      this.notification.error('Por favor, insere um email válido.');
+      return;
+    }
+
+    this.sendingResetEmail.set(true);
+    this.auth.forgotPassword(email).subscribe({
+      next: (res) => {
+        this.sendingResetEmail.set(false);
+        this.closeForgotPasswordModal();
+        this.notification.success(res.message || 'Enviámos instruções para o teu email.', 6000);
+      },
+      error: () => {
+        this.sendingResetEmail.set(false);
+        this.notification.error('Não foi possível enviar o email. Tenta novamente.');
+      }
+    });
+  }
 
   get lf(){ return this.loginForm.controls; }
   get rf(){ return this.registerForm.controls; }

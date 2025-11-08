@@ -11,6 +11,7 @@ export const routes: Routes = [
   { path: 'historico', loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent), canActivate: [approvedGuard], title: 'Histórico · Barbearia' },
   { path: 'confirmar', loadComponent: () => import('./pages/confirm/confirm.component').then(m => m.ConfirmComponent), title: 'Confirmar email' },
   { path: 'definir-senha', loadComponent: () => import('./pages/set-password/set-password.component').then(m => m.SetPasswordComponent), title: 'Definir senha · Barbearia' },
+  { path: 'redefinir-senha', loadComponent: () => import('./pages/reset-password/reset-password.component').then(m => m.ResetPasswordComponent), title: 'Redefinir password · Barbearia' },
   { path: '**', loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent), title: 'Não encontrado' },
 
 ];
