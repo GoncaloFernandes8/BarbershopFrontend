@@ -15,7 +15,7 @@ import { NotificationService } from '../../services/notification.service';
 export class ResetPasswordComponent implements OnInit {
   private fb = inject(NonNullableFormBuilder);
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  protected router = inject(Router);
   private auth = inject(AuthService);
   private notification = inject(NotificationService);
 
