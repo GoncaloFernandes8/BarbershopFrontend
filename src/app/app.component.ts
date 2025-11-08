@@ -4,6 +4,7 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } fro
 import { AuthService } from './services/auth.service';
 import { NotificationService } from './services/notification.service';
 import { LanguageService } from './services/language.service';
+import { KeepAliveService } from './services/keep-alive.service';
 import { filter } from 'rxjs/operators';
 import { NotificationToastComponent } from './components/notification-toast/notification-toast.component';
 
@@ -20,6 +21,7 @@ export class AppComponent implements OnInit {
   protected auth = inject(AuthService);
   private notification = inject(NotificationService);
   protected lang = inject(LanguageService);
+  private keepAlive = inject(KeepAliveService);
 
   isAuthPage = false;
 
@@ -57,6 +59,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  // Iniciar keep-alive para evitar cold starts no Koyeb
+  this.keepAlive.startKeepAlive();
+
   this.router.events
     .pipe(filter(e => e instanceof NavigationEnd))
     .subscribe(() => {
